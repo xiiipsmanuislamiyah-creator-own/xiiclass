@@ -8,9 +8,14 @@
   "theme_color": "#0F5132",
   "icons": [
     {
-      "src": "icon-madrasah.jpg",
+      "src": "icon-erekap-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-erekap.png",
       "sizes": "512x512",
-      "type": "image/jpeg"
+      "type": "image/png"
     }
   ]
 }

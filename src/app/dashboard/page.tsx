@@ -161,27 +161,27 @@ export default function DashboardPage() {
           <div className="relative z-10 px-5 pt-5 pb-12 sm:px-7 sm:pt-7 sm:pb-14 space-y-6">
             {/* Top App Row */}
             <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2.5">
-                <div className="lg:hidden h-9 w-9 rounded-xl bg-white/15 p-0.5 ring-1 ring-white/25">
-                  <img
-                    src={withBasePath("/icon-madrasah.jpg")}
-                    alt="E-Rekap"
-                    width={36}
-                    height={36}
-                    className="h-full w-full rounded-[10px] object-cover"
-                  />
-                </div>
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-lime-200/90">
+              <div className="flex items-center gap-3 min-w-0">
+                <img
+                  src={withBasePath("/icon-erekap.png")}
+                  alt="E-Rekap"
+                  width={40}
+                  height={40}
+                  className="lg:hidden h-10 w-10 shrink-0 object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.35)]"
+                />
+                <div className="min-w-0">
+                  <p className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-lime-200/90 truncate">
                     {data?.school
                       ? `TA ${data.school.academic_year} • ${data.school.semester}`
                       : "E-Rekap Madrasah"}
                   </p>
-                  <p className="text-sm font-extrabold text-white lg:hidden">E-Rekap</p>
+                  <p className="text-sm font-extrabold text-white lg:hidden leading-tight">E-Rekap</p>
                 </div>
               </div>
 
-              <PeriodPicker value={period} onChange={setPeriod} variant="canopy" />
+              <div className="shrink-0">
+                <PeriodPicker value={period} onChange={setPeriod} variant="canopy" />
+              </div>
             </div>
 
             {/* Hero Metric & Action Row */}

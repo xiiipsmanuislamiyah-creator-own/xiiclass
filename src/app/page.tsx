@@ -102,15 +102,13 @@ export default function LandingPage() {
         {/* Sticky Top Navbar */}
         <header className="relative z-20 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between animate-cascade">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl p-0.5 bg-gradient-to-br from-[#115737] to-[#072919] shadow-md">
-              <img
-                src={withBasePath("/icon-madrasah.jpg")}
-                alt="Logo E-Rekap"
-                width={40}
-                height={40}
-                className="h-full w-full rounded-[10px] object-cover"
-              />
-            </div>
+            <img
+              src={withBasePath("/icon-erekap.png")}
+              alt="Logo E-Rekap"
+              width={40}
+              height={40}
+              className="h-10 w-10 shrink-0 object-contain drop-shadow-sm"
+            />
             <div>
               <p className="text-base font-extrabold tracking-tight text-[var(--ink)] leading-none">
                 E-Rekap

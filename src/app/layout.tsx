@@ -22,8 +22,12 @@ export const metadata: Metadata = {
   description: "Aplikasi rekapitulasi kehadiran siswa berstandar formal sekolah.",
   manifest: `${basePath}/manifest.json`,
   icons: {
-    icon: `${basePath}/icon-madrasah.jpg`,
-    apple: `${basePath}/icon-madrasah.jpg`,
+    icon: [
+      { url: `${basePath}/icon-erekap-32.png`, sizes: "32x32", type: "image/png" },
+      { url: `${basePath}/icon-erekap-192.png`, sizes: "192x192", type: "image/png" },
+      { url: `${basePath}/icon-erekap.png`, sizes: "512x512", type: "image/png" },
+    ],
+    apple: `${basePath}/apple-touch-icon.png`,
   },
 };
 

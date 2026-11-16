@@ -45,15 +45,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {/* Desktop Sidebar (>= 1024px) */}
         <aside className="no-print hidden lg:flex lg:w-68 lg:flex-col lg:fixed lg:inset-y-0 bg-[var(--surface)] border-r border-[var(--border)] shadow-[4px_0_24px_-12px_rgba(10,61,38,0.12)] z-30">
           <Link href="/" className="flex items-center gap-3.5 px-5 py-5 border-b border-[var(--border)] hover:bg-[var(--surface-raised)] transition-colors">
-            <div className="h-11 w-11 rounded-2xl p-0.5 bg-gradient-to-br from-[#115737] to-[#072919] shadow-md shrink-0">
-              <img
-                src={withBasePath("/icon-madrasah.jpg")}
-                alt="Ikon E-Rekap"
-                width={44}
-                height={44}
-                className="h-full w-full rounded-[14px] object-cover"
-              />
-            </div>
+            <img
+              src={withBasePath("/icon-erekap.png")}
+              alt="Ikon E-Rekap"
+              width={44}
+              height={44}
+              className="h-11 w-11 shrink-0 object-contain drop-shadow-sm"
+            />
             <div className="min-w-0">
               <p className="text-base font-extrabold tracking-tight text-[var(--ink)] truncate">
                 E-Rekap

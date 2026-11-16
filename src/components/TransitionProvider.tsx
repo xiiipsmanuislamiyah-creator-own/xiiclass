@@ -81,13 +81,13 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
                 <circle cx="60" cy="60" r="46" stroke="rgba(255,255,255,0.22)" strokeWidth="1" />
               </svg>
               <span className="curtain-halo absolute h-24 w-24 rounded-3xl ring-2 ring-[#A3E635]/45" />
-              <div className="animate-remotion-logo relative h-20 w-20 overflow-hidden rounded-2xl bg-white/10 p-1 ring-1 ring-white/30 shadow-2xl">
+              <div className="animate-remotion-logo relative h-20 w-20 shrink-0 drop-shadow-[0_14px_28px_rgba(0,0,0,0.45)]">
                 <img
-                  src={withBasePath("/icon-madrasah.jpg")}
+                  src={withBasePath("/icon-erekap.png")}
                   alt=""
                   width={80}
                   height={80}
-                  className="h-full w-full rounded-xl object-cover"
+                  className="h-full w-full object-contain"
                 />
               </div>
             </div>
