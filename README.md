@@ -4,6 +4,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Turso](https://img.shields.io/badge/Database-Turso%20%2F%20SQLite-4FF8D2?style=flat-square)](https://turso.tech/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-A3E635?style=flat-square)](LICENSE)
+[![WhatsApp Channel](https://img.shields.io/badge/WhatsApp-Join%20Channel-25D366?style=flat-square&logo=whatsapp&logoColor=white)](https://whatsapp.com/channel/0029VbBjyjlJ93wa6hwSWa0p)
 
 **E-Rekap** is an open-source, mobile-first monthly student attendance recap web application built with Next.js App Router, Tailwind CSS, and hybrid SQLite / Turso (libSQL) persistence. Designed for schools and homeroom teachers with zero-friction setup, printable A4 reports, Excel (`.xlsx`) backup/import, and an in-app Cloud Database setup wizard.
 
@@ -79,6 +80,14 @@ Open `http://localhost:3000/xiiclass` (default admin login: `admin` / `admin123`
 2. To allow teachers to connect their own Turso database directly from `/admin` without touching Vercel:
    - Add `VERCEL_TOKEN` (and optionally `VERCEL_PROJECT_ID`, `VERCEL_TEAM_ID`) in Vercel Project Environment Variables once.
    - Log in to `/xiiclass/admin`, open the **Database** tab, paste the Turso `libsql://...` URL & Auth Token, click **Tes Koneksi**, then **Simpan & Hubungkan**.
+
+---
+
+## Community & Updates
+
+Join the official WhatsApp Channel for updates, releases, and discussion:
+
+- **Saluran WhatsApp:** [Join Saluran WhatsApp](https://whatsapp.com/channel/0029VbBjyjlJ93wa6hwSWa0p)
 
 ---
 
