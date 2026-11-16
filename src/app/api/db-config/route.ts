@@ -218,6 +218,12 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  if (process.env.DEMO_MODE === "true") {
+    return NextResponse.json(
+      { error: "Mode Demo: Pengaturan database dinonaktifkan." },
+      { status: 403 }
+    );
+  }
   const session = await getAdminSession();
   if (!session) {
     return NextResponse.json({ error: "Akses Admin diperlukan." }, { status: 401 });

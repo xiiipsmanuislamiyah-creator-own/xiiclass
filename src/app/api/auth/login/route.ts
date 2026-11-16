@@ -4,6 +4,12 @@ import { getDb } from "@/lib/db";
 import { createSessionToken, SESSION_COOKIE_NAME } from "@/lib/auth";
 
 export async function POST(req: Request) {
+  if (process.env.DEMO_MODE === "true") {
+    return NextResponse.json(
+      { error: "Mode Demo: Login Admin dinonaktifkan pada pratinjau publik." },
+      { status: 403 }
+    );
+  }
   try {
     const body = await req.json();
     const username = String(body.username || "").trim();

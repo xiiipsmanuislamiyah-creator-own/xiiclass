@@ -240,6 +240,57 @@ export default function InfoPage() {
             </div>
           </section>
 
+          {/* 2.5. Anggota Kelompok (Tampil pada versi tugas kelas, disembunyikan pada mode demo) */}
+          {process.env.NEXT_PUBLIC_DEMO_MODE !== "true" && (
+            <section
+              aria-label="Anggota Kelompok"
+              className="card-pro rounded-3xl p-5 sm:p-6 space-y-4 animate-cascade"
+              style={{ animationDelay: "140ms" }}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-[var(--canopy)]">
+                    Tim Penyusun
+                  </p>
+                  <h2 className="text-lg font-extrabold text-[var(--ink)]">
+                    Anggota Kelompok
+                  </h2>
+                </div>
+                <span className="font-num rounded-full bg-[var(--surface-mint)] px-3 py-1 text-xs font-extrabold text-[var(--canopy)]">
+                  6 Anggota
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                {[
+                  { name: "Rohmatulloh", role: "Ketua & Pengembang" },
+                  { name: "M. Wildan Ulin Nuha", role: "Anggota Kelompok" },
+                  { name: "Reski Abdillah", role: "Anggota Kelompok" },
+                  { name: "Ananda Iksan Wijaya", role: "Anggota Kelompok" },
+                  { name: "M. Hafid", role: "Anggota Kelompok" },
+                  { name: "M. Kafka", role: "Anggota Kelompok" },
+                ].map((member, idx) => (
+                  <div
+                    key={member.name}
+                    className="flex items-center gap-3 rounded-2xl bg-[var(--bg)] px-3.5 py-3"
+                  >
+                    <span className="font-num flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0A3D26] text-xs font-extrabold text-[#A3E635]">
+                      {idx + 1}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-sm font-extrabold text-[var(--ink)] truncate">
+                        {member.name}
+                      </p>
+                      <p className="text-[11px] font-semibold text-[var(--ink-muted)] truncate">
+                        {member.role}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
           {/* 3. BOTTOM: Personal Branding & Profil Pengembang (Rohmatulloh / R_HMT OFC) */}
           <section
             aria-label="Profil Pengembang"

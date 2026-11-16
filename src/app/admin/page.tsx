@@ -537,8 +537,17 @@ export default function AdminPage() {
           <div className="relative z-20 -mt-9 mx-auto max-w-md px-3.5 lg:px-0 animate-cascade">
             <div className="sheet-overlap rounded-3xl p-6 sm:p-7 space-y-5">
               <p className="text-xs font-medium text-[var(--ink-muted)] leading-relaxed">
-                Siswa dan guru tetap dapat meninjau Dashboard & Tabel Rekap tanpa login. Masuk sebagai Admin untuk mengelola data dan backup XLSX.
+                Siswa dan guru tetap dapat meninjau Dashboard &amp; Tabel Rekap tanpa login. Masuk sebagai Admin untuk mengelola data dan backup XLSX.
               </p>
+
+              {process.env.NEXT_PUBLIC_DEMO_MODE === "true" && (
+                <div
+                  role="status"
+                  className="rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-xs font-bold text-amber-900 leading-relaxed"
+                >
+                  Mode Demo (Pratinjau Publik): Fitur login dan perubahan data Admin dinonaktifkan. Silakan jelajahi Dashboard, Grafik, dan Tabel Rekap.
+                </div>
+              )}
 
               {loginError && (
                 <div
@@ -583,10 +592,14 @@ export default function AdminPage() {
 
                 <button
                   type="submit"
-                  disabled={loginLoading}
+                  disabled={loginLoading || process.env.NEXT_PUBLIC_DEMO_MODE === "true"}
                   className="btn-tactile w-full rounded-full bg-[#A3E635] px-5 py-3.5 text-sm font-extrabold text-[#072919] shadow-md hover:bg-[#BEF264] disabled:opacity-60 min-h-[46px]"
                 >
-                  {loginLoading ? "Memverifikasi..." : "Masuk sebagai Admin"}
+                  {process.env.NEXT_PUBLIC_DEMO_MODE === "true"
+                    ? "Login Dinonaktifkan (Mode Demo)"
+                    : loginLoading
+                      ? "Memverifikasi..."
+                      : "Masuk sebagai Admin"}
                 </button>
               </form>
             </div>

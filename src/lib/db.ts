@@ -244,6 +244,64 @@ export async function seedMinimalOnClient(db: DbClient): Promise<void> {
       ["admin", hash, "Administrator Rekap"]
     );
   }
+
+  if (process.env.DEMO_MODE === "true") {
+    const classCount = await db.queryOne<{ c: number }>("SELECT COUNT(*) as c FROM classes");
+    if (!classCount || Number(classCount.c) === 0) {
+      const currentPeriod = new Date().toISOString().slice(0, 7);
+      const demoClasses = [
+        {
+          name: "X IPA 1",
+          teacher: "Siti Aminah, S.Pd",
+          students: [
+            { nis: "01", name: "Ahmad Rifqi Maulana", gender: "L", h: 20, s: 1, i: 0, a: 0, note: "" },
+            { nis: "02", name: "Aisyah Nur Hidayah", gender: "P", h: 21, s: 0, i: 0, a: 0, note: "" },
+            { nis: "03", name: "Bagus Pratama Putra", gender: "L", h: 19, s: 1, i: 1, a: 0, note: "Izin acara keluarga" },
+            { nis: "04", name: "Citra Dewi Lestari", gender: "P", h: 21, s: 0, i: 0, a: 0, note: "" },
+            { nis: "05", name: "Dimas Wahyu Saputra", gender: "L", h: 18, s: 0, i: 1, a: 2, note: "Perlu pembinaan" },
+          ],
+        },
+        {
+          name: "XI IPA 1",
+          teacher: "M. Syafi'i, S.Ag",
+          students: [
+            { nis: "01", name: "Fajar Kurniawan", gender: "L", h: 21, s: 0, i: 0, a: 0, note: "" },
+            { nis: "02", name: "Hana Maulida", gender: "P", h: 19, s: 2, i: 0, a: 0, note: "Surat dokter" },
+            { nis: "03", name: "Ilham Akbar Wijaya", gender: "L", h: 20, s: 0, i: 1, a: 0, note: "Dispensasi OSN" },
+            { nis: "04", name: "Khusnul Khotimah", gender: "P", h: 21, s: 0, i: 0, a: 0, note: "" },
+          ],
+        },
+        {
+          name: "XII IPS 1",
+          teacher: "Nurul Huda, M.Pd",
+          students: [
+            { nis: "01", name: "Moh. Zainul Arifin", gender: "L", h: 20, s: 0, i: 1, a: 0, note: "" },
+            { nis: "02", name: "Putri Salsabila", gender: "P", h: 21, s: 0, i: 0, a: 0, note: "" },
+            { nis: "03", name: "Rizky Aditya", gender: "L", h: 18, s: 2, i: 1, a: 0, note: "" },
+            { nis: "04", name: "Siti Fatimah Az-Zahra", gender: "P", h: 21, s: 0, i: 0, a: 0, note: "" },
+          ],
+        },
+      ];
+
+      for (const cls of demoClasses) {
+        const clsRes = await db.execute(
+          "INSERT INTO classes (name, homeroom_teacher) VALUES (?, ?)",
+          [cls.name, cls.teacher]
+        );
+        const classId = clsRes.lastInsertRowid;
+        for (const st of cls.students) {
+          const stRes = await db.execute(
+            "INSERT INTO students (class_id, nis, name, gender) VALUES (?, ?, ?, ?)",
+            [classId, st.nis, st.name, st.gender]
+          );
+          await db.execute(
+            "INSERT INTO rekap_records (student_id, period, hadir, sakit, izin, alpha, note) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [stRes.lastInsertRowid, currentPeriod, st.h, st.s, st.i, st.a, st.note]
+          );
+        }
+      }
+    }
+  }
 }
 
 export async function getDb(): Promise<DbClient> {

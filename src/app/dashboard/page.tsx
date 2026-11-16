@@ -14,6 +14,7 @@ import {
   BookOpenText,
   ChalkboardTeacher,
   SquaresFour,
+  ChartDonut,
 } from "@phosphor-icons/react";
 import { AppShell } from "@/components/AppShell";
 import { AmbientBackdrop } from "@/components/AmbientBackdrop";
@@ -102,6 +103,7 @@ const CLASS_ICONS = [GraduationCap, BookOpenText, ChalkboardTeacher];
 export default function DashboardPage() {
   const [period, setPeriod] = useState(() => new Date().toISOString().slice(0, 7));
   const [classId, setClassId] = useState("all");
+  const [viewMode, setViewMode] = useState<"summary" | "chart">("summary");
   const [data, setData] = useState<OverviewData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -332,6 +334,208 @@ export default function DashboardPage() {
             </div>
           )}
 
+          {/* View Mode Switcher (Ringkasan vs Grafik) */}
+          <div className="flex items-center justify-between gap-3">
+            <div
+              role="tablist"
+              aria-label="Mode Tampilan Dashboard"
+              className="inline-flex items-center gap-1 rounded-full bg-[var(--surface)] p-1 border border-[var(--border)] shadow-[var(--shadow-card)]"
+            >
+              <button
+                type="button"
+                role="tab"
+                aria-selected={viewMode === "summary"}
+                onClick={() => setViewMode("summary")}
+                className={`btn-tactile inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-extrabold transition-colors ${
+                  viewMode === "summary"
+                    ? "bg-[#0A3D26] text-[#A3E635] shadow-sm"
+                    : "text-[var(--ink-muted)] hover:text-[var(--ink)]"
+                }`}
+              >
+                <SquaresFour size={15} weight={viewMode === "summary" ? "fill" : "regular"} />
+                <span>Ringkasan</span>
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={viewMode === "chart"}
+                onClick={() => setViewMode("chart")}
+                className={`btn-tactile inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-extrabold transition-colors ${
+                  viewMode === "chart"
+                    ? "bg-[#0A3D26] text-[#A3E635] shadow-sm"
+                    : "text-[var(--ink-muted)] hover:text-[var(--ink)]"
+                }`}
+              >
+                <ChartDonut size={15} weight={viewMode === "chart" ? "fill" : "regular"} />
+                <span>Grafik</span>
+              </button>
+            </div>
+
+            <span className="font-num text-xs font-bold text-[var(--ink-muted)]">
+              {totalSessions.toLocaleString("id-ID")} Sesi Tercatat
+            </span>
+          </div>
+
+          {viewMode === "chart" ? (
+            <section aria-label="Visualisasi Grafik Kehadiran" className="grid grid-cols-1 lg:grid-cols-12 gap-4 animate-cascade">
+              {/* SVG Donut Chart Card */}
+              <div className="lg:col-span-5 card-pro rounded-3xl p-5 sm:p-6 space-y-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-wider text-[var(--canopy)]">
+                      Proporsi Kehadiran
+                    </p>
+                    <h3 className="text-base font-extrabold text-[var(--ink)]">
+                      Distribusi Status Bulanan
+                    </h3>
+                  </div>
+                  <span className="font-num rounded-full bg-[var(--surface-mint)] px-3 py-1 text-xs font-extrabold text-[var(--canopy)]">
+                    {data?.summary.attendance_rate ?? 0}% Hadir
+                  </span>
+                </div>
+
+                {(() => {
+                  const segments = [
+                    { label: "Hadir", val: data?.summary.total_hadir ?? 0, color: "#15803D", dot: "bg-[#15803D]" },
+                    { label: "Sakit", val: data?.summary.total_sakit ?? 0, color: "#F59E0B", dot: "bg-amber-500" },
+                    { label: "Izin", val: data?.summary.total_izin ?? 0, color: "#0284C7", dot: "bg-sky-600" },
+                    { label: "Alpha", val: data?.summary.total_alpha ?? 0, color: "#E11D48", dot: "bg-rose-600" },
+                  ];
+                  const r = 64;
+                  const circ = 2 * Math.PI * r;
+                  let accOffset = 0;
+
+                  return (
+                    <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row items-center gap-6">
+                      <div className="relative h-44 w-44 shrink-0 flex items-center justify-center">
+                        <svg viewBox="0 0 160 160" className="h-44 w-44 -rotate-90">
+                          <circle
+                            cx="80"
+                            cy="80"
+                            r={r}
+                            fill="none"
+                            stroke="var(--bg)"
+                            strokeWidth="20"
+                          />
+                          {totalSessions > 0 &&
+                            segments.map((seg) => {
+                              if (seg.val <= 0) return null;
+                              const len = (seg.val / totalSessions) * circ;
+                              const dashArray = `${len} ${circ - len}`;
+                              const dashOffset = -accOffset;
+                              accOffset += len;
+                              return (
+                                <circle
+                                  key={seg.label}
+                                  cx="80"
+                                  cy="80"
+                                  r={r}
+                                  fill="none"
+                                  stroke={seg.color}
+                                  strokeWidth="20"
+                                  strokeDasharray={dashArray}
+                                  strokeDashoffset={dashOffset}
+                                  className="transition-all duration-700 ease-out"
+                                />
+                              );
+                            })}
+                        </svg>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                          <span className="font-num text-2xl font-extrabold text-[var(--ink)]">
+                            {totalSessions.toLocaleString("id-ID")}
+                          </span>
+                          <span className="text-[11px] font-bold text-[var(--ink-muted)]">
+                            Total Sesi
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="w-full grid grid-cols-2 sm:grid-cols-1 gap-2.5">
+                        {segments.map((seg) => (
+                          <div
+                            key={seg.label}
+                            className="flex items-center justify-between rounded-2xl bg-[var(--bg)] px-3.5 py-2.5"
+                          >
+                            <span className="flex items-center gap-2 text-xs font-bold text-[var(--ink)]">
+                              <span className={`h-2.5 w-2.5 rounded-full ${seg.dot}`} />
+                              {seg.label}
+                            </span>
+                            <span className="font-num text-xs font-extrabold text-[var(--ink)]">
+                              {seg.val} <span className="text-[var(--ink-muted)]">({pctOf(seg.val)}%)</span>
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* Per-Class Stacked Bar Comparison */}
+              <div className="lg:col-span-7 card-pro rounded-3xl p-5 sm:p-6 space-y-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-wider text-[var(--canopy)]">
+                      Komparasi Kelas
+                    </p>
+                    <h3 className="text-base font-extrabold text-[var(--ink)]">
+                      Grafik Kehadiran Per Kelas
+                    </h3>
+                  </div>
+                  <Link
+                    href="/rekap"
+                    className="text-xs font-bold text-[var(--canopy)] hover:underline underline-offset-4"
+                  >
+                    Buka Tabel
+                  </Link>
+                </div>
+
+                {!data || data.classBreakdown.length === 0 ? (
+                  <div className="rounded-2xl bg-[var(--bg)] p-8 text-center text-xs font-semibold text-[var(--ink-muted)]">
+                    Belum ada data kelas untuk divisualisasikan.
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {data.classBreakdown.map((row) => {
+                      const total = row.hadir + row.sakit + row.izin + row.alpha;
+                      const rate = total > 0 ? Math.round((row.hadir / total) * 1000) / 10 : 0;
+                      const w = (val: number) => (total > 0 ? `${(val / total) * 100}%` : "0%");
+                      return (
+                        <div key={row.id} className="space-y-2 rounded-2xl bg-[var(--bg)] p-3.5">
+                          <div className="flex items-center justify-between gap-2">
+                            <div>
+                              <p className="text-sm font-extrabold text-[var(--ink)]">{row.name}</p>
+                              <p className="text-[11px] font-medium text-[var(--ink-muted)]">
+                                {row.total_students} Siswa • {row.homeroom_teacher}
+                              </p>
+                            </div>
+                            <span className="font-num rounded-full bg-[#0A3D26] px-2.5 py-1 text-xs font-extrabold text-[#A3E635]">
+                              {rate}%
+                            </span>
+                          </div>
+
+                          <div className="h-3.5 w-full overflow-hidden rounded-full bg-white flex">
+                            <div style={{ width: w(row.hadir) }} className="h-full bg-[#15803D]" title={`Hadir: ${row.hadir}`} />
+                            <div style={{ width: w(row.sakit) }} className="h-full bg-amber-500" title={`Sakit: ${row.sakit}`} />
+                            <div style={{ width: w(row.izin) }} className="h-full bg-sky-600" title={`Izin: ${row.izin}`} />
+                            <div style={{ width: w(row.alpha) }} className="h-full bg-rose-600" title={`Alpha: ${row.alpha}`} />
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-3 text-[11px] font-num font-bold text-[var(--ink-muted)]">
+                            <span className="text-[#15803D]">H: {row.hadir}</span>
+                            <span className="text-amber-700">S: {row.sakit}</span>
+                            <span className="text-sky-700">I: {row.izin}</span>
+                            <span className="text-rose-700">A: {row.alpha}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </section>
+          ) : (
+            <>
           {/* 4 Metric Cards */}
           <section aria-label="Metrik Kehadiran" className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
             {[
@@ -492,6 +696,8 @@ export default function DashboardPage() {
               </div>
             )}
           </section>
+            </>
+          )}
         </div>
       </div>
     </AppShell>
