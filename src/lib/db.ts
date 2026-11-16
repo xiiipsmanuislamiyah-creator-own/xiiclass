@@ -3,7 +3,9 @@ import bcrypt from "bcryptjs";
 import fs from "fs";
 import path from "path";
 
-const DATA_DIR = path.join(process.cwd(), "data");
+const DATA_DIR = process.env.VERCEL
+  ? "/tmp/erekap-data"
+  : path.join(process.cwd(), "data");
 const DB_PATH = path.join(DATA_DIR, "rekap.db");
 
 let dbInstance: Database.Database | null = null;
