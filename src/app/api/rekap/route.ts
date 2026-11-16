@@ -4,7 +4,7 @@ import { getAdminSession } from "@/lib/auth";
 
 export async function GET(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const { searchParams } = new URL(req.url);
     const period = searchParams.get("period") || new Date().toISOString().slice(0, 7);
     const classId = searchParams.get("classId");
@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
 
     sql += " ORDER BY c.name ASC, s.name ASC";
 
-    const rows = db.prepare(sql).all(...params) as Array<{
+    const rows = await db.query<{
       student_id: number;
       nis: string;
       name: string;
@@ -56,12 +56,16 @@ export async function GET(req: NextRequest) {
       izin: number;
       alpha: number;
       note: string;
-    }>;
+    }>(sql, params);
 
     const enriched = rows.map((row) => {
-      const total = row.hadir + row.sakit + row.izin + row.alpha;
-      const percentage = total > 0 ? Math.round((row.hadir / total) * 1000) / 10 : 0;
-      return { ...row, total, percentage };
+      const hadir = Number(row.hadir) || 0;
+      const sakit = Number(row.sakit) || 0;
+      const izin = Number(row.izin) || 0;
+      const alpha = Number(row.alpha) || 0;
+      const total = hadir + sakit + izin + alpha;
+      const percentage = total > 0 ? Math.round((hadir / total) * 1000) / 10 : 0;
+      return { ...row, hadir, sakit, izin, alpha, total, percentage };
     });
 
     return NextResponse.json({ period, rows: enriched });
@@ -92,8 +96,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Payload rekap tidak valid." }, { status: 400 });
     }
 
-    const db = getDb();
-    const upsert = db.prepare(`
+    const db = await getDb();
+    const upsertSql = `
       INSERT INTO rekap_records (student_id, period, hadir, sakit, izin, alpha, note, updated_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
       ON CONFLICT(student_id, period) DO UPDATE SET
@@ -103,23 +107,23 @@ export async function POST(req: Request) {
         alpha = excluded.alpha,
         note = excluded.note,
         updated_at = CURRENT_TIMESTAMP
-    `);
+    `;
 
-    const tx = db.transaction(() => {
-      for (const item of entries) {
-        upsert.run(
+    await db.batch(
+      entries.map((item) => ({
+        sql: upsertSql,
+        args: [
           Number(item.student_id),
           period,
           Math.max(0, Number(item.hadir) || 0),
           Math.max(0, Number(item.sakit) || 0),
           Math.max(0, Number(item.izin) || 0),
           Math.max(0, Number(item.alpha) || 0),
-          String(item.note || "").trim()
-        );
-      }
-    });
+          String(item.note || "").trim(),
+        ],
+      }))
+    );
 
-    tx();
     return NextResponse.json({ ok: true, count: entries.length });
   } catch {
     return NextResponse.json({ error: "Gagal menyimpan data rekap." }, { status: 500 });

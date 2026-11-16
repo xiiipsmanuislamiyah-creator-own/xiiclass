@@ -20,10 +20,11 @@ export async function POST(req: Request) {
     );
   }
 
-  const db = getDb();
-  const admin = db
-    .prepare("SELECT id, password_hash FROM admins WHERE id = ?")
-    .get(session.adminId) as { id: number; password_hash: string } | undefined;
+  const db = await getDb();
+  const admin = await db.queryOne<{ id: number; password_hash: string }>(
+    "SELECT id, password_hash FROM admins WHERE id = ?",
+    [session.adminId]
+  );
 
   if (!admin || !bcrypt.compareSync(currentPassword, admin.password_hash)) {
     return NextResponse.json(
@@ -33,7 +34,7 @@ export async function POST(req: Request) {
   }
 
   const nextHash = bcrypt.hashSync(newPassword, 10);
-  db.prepare("UPDATE admins SET password_hash = ? WHERE id = ?").run(nextHash, admin.id);
+  await db.execute("UPDATE admins SET password_hash = ? WHERE id = ?", [nextHash, admin.id]);
 
   return NextResponse.json({ ok: true });
 }

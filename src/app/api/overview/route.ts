@@ -3,26 +3,24 @@ import { getDb } from "@/lib/db";
 
 export async function GET(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const { searchParams } = new URL(req.url);
     const period = searchParams.get("period") || new Date().toISOString().slice(0, 7);
     const classIdParam = searchParams.get("classId");
 
-    const school = db.prepare("SELECT * FROM schools WHERE id = 1").get();
-    const classes = db
-      .prepare(`
-        SELECT c.id, c.name, c.homeroom_teacher, COUNT(s.id) as student_count
-        FROM classes c
-        LEFT JOIN students s ON s.class_id = c.id
-        GROUP BY c.id
-        ORDER BY c.name ASC
-      `)
-      .all() as Array<{
-        id: number;
-        name: string;
-        homeroom_teacher: string;
-        student_count: number;
-      }>;
+    const school = await db.queryOne("SELECT * FROM schools WHERE id = 1");
+    const classes = await db.query<{
+      id: number;
+      name: string;
+      homeroom_teacher: string;
+      student_count: number;
+    }>(`
+      SELECT c.id, c.name, c.homeroom_teacher, COUNT(s.id) as student_count
+      FROM classes c
+      LEFT JOIN students s ON s.class_id = c.id
+      GROUP BY c.id
+      ORDER BY c.name ASC
+    `);
 
     const classFilter = classIdParam && classIdParam !== "all" ? Number(classIdParam) : null;
 
@@ -49,20 +47,22 @@ export async function GET(req: NextRequest) {
         LEFT JOIN rekap_records r ON r.student_id = s.id AND r.period = ?
       `;
 
-    const summary = (
-      classFilter
-        ? db.prepare(summaryQuery).get(period, classFilter)
-        : db.prepare(summaryQuery).get(period)
-    ) as {
+    const summary = (await db.queryOne<{
       total_students: number;
       total_hadir: number;
       total_sakit: number;
       total_izin: number;
       total_alpha: number;
+    }>(summaryQuery, classFilter ? [period, classFilter] : [period])) ?? {
+      total_students: 0,
+      total_hadir: 0,
+      total_sakit: 0,
+      total_izin: 0,
+      total_alpha: 0,
     };
 
-    const classBreakdown = db
-      .prepare(`
+    const classBreakdown = await db.query(
+      `
         SELECT
           c.id,
           c.name,
@@ -77,20 +77,28 @@ export async function GET(req: NextRequest) {
         LEFT JOIN rekap_records r ON r.student_id = s.id AND r.period = ?
         GROUP BY c.id
         ORDER BY c.name ASC
-      `)
-      .all(period);
+      `,
+      [period]
+    );
 
-    const totalSessions =
-      summary.total_hadir + summary.total_sakit + summary.total_izin + summary.total_alpha;
+    const totalHadir = Number(summary.total_hadir) || 0;
+    const totalSakit = Number(summary.total_sakit) || 0;
+    const totalIzin = Number(summary.total_izin) || 0;
+    const totalAlpha = Number(summary.total_alpha) || 0;
+    const totalSessions = totalHadir + totalSakit + totalIzin + totalAlpha;
     const attendanceRate =
-      totalSessions > 0 ? Math.round((summary.total_hadir / totalSessions) * 1000) / 10 : 0;
+      totalSessions > 0 ? Math.round((totalHadir / totalSessions) * 1000) / 10 : 0;
 
     return NextResponse.json({
       period,
       school,
       classes,
       summary: {
-        ...summary,
+        total_students: Number(summary.total_students) || 0,
+        total_hadir: totalHadir,
+        total_sakit: totalSakit,
+        total_izin: totalIzin,
+        total_alpha: totalAlpha,
         attendance_rate: attendanceRate,
       },
       classBreakdown,

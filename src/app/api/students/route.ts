@@ -19,12 +19,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Kelas, No. Absen, dan Nama wajib diisi." }, { status: 400 });
     }
 
-    const db = getDb();
-    const res = db
-      .prepare("INSERT INTO students (class_id, nis, name, gender) VALUES (?, ?, ?, ?)")
-      .run(classId, nis, name, gender);
+    const db = await getDb();
+    const res = await db.execute(
+      "INSERT INTO students (class_id, nis, name, gender) VALUES (?, ?, ?, ?)",
+      [classId, nis, name, gender]
+    );
 
-    return NextResponse.json({ ok: true, id: Number(res.lastInsertRowid) });
+    return NextResponse.json({ ok: true, id: res.lastInsertRowid });
   } catch {
     return NextResponse.json({ error: "Gagal menambahkan siswa." }, { status: 500 });
   }
@@ -43,8 +44,8 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "ID siswa diperlukan." }, { status: 400 });
     }
 
-    const db = getDb();
-    db.prepare("DELETE FROM students WHERE id = ?").run(id);
+    const db = await getDb();
+    await db.execute("DELETE FROM students WHERE id = ?", [id]);
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: "Gagal menghapus siswa." }, { status: 500 });

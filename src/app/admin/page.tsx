@@ -16,6 +16,8 @@ import {
   Table,
   FileXls,
   UploadSimple,
+  Database,
+  PlugCharging,
 } from "@phosphor-icons/react";
 import { AppShell } from "@/components/AppShell";
 import { AmbientBackdrop } from "@/components/AmbientBackdrop";
@@ -64,7 +66,7 @@ export default function AdminPage() {
   const [loginError, setLoginError] = useState<string | null>(null);
 
   // Active tab
-  const [tab, setTab] = useState<"rekap" | "master" | "school">("rekap");
+  const [tab, setTab] = useState<"rekap" | "master" | "school" | "database">("rekap");
 
   // Toast feedback
   const [toast, setToast] = useState<{ type: "ok" | "err"; text: string } | null>(null);
@@ -101,6 +103,20 @@ export default function AdminPage() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
+  // Database setup state
+  const [dbStatus, setDbStatus] = useState<{
+    mode: "turso" | "local";
+    urlMasked: string | null;
+    isVercel: boolean;
+    vercelApiReady: boolean;
+    stats: { classes: number; students: number; rekap: number };
+  } | null>(null);
+  const [dbUrl, setDbUrl] = useState("");
+  const [dbToken, setDbToken] = useState("");
+  const [migrateLocal, setMigrateLocal] = useState(true);
+  const [dbTesting, setDbTesting] = useState(false);
+  const [dbSaving, setDbSaving] = useState(false);
+
   const checkSession = useCallback(async () => {
     try {
       const res = await fetch(withBasePath("/api/auth/session"));
@@ -115,9 +131,10 @@ export default function AdminPage() {
   }, []);
 
   const loadMeta = useCallback(async () => {
-    const [cRes, sRes] = await Promise.all([
+    const [cRes, sRes, dRes] = await Promise.all([
       fetch(withBasePath("/api/classes")),
       fetch(withBasePath("/api/school")),
+      fetch(withBasePath("/api/db-config")),
     ]);
     if (cRes.ok) {
       const cd = await cRes.json();
@@ -130,6 +147,10 @@ export default function AdminPage() {
     if (sRes.ok) {
       const sd = await sRes.json();
       if (sd.school) setSchool(sd.school);
+    }
+    if (dRes.ok) {
+      const dd = await dRes.json();
+      setDbStatus(dd);
     }
   }, [selectedClassId]);
 
@@ -414,6 +435,63 @@ export default function AdminPage() {
     showToast("ok", "Password Admin berhasil diperbarui.");
   };
 
+  const handleTestDb = async () => {
+    setDbTesting(true);
+    try {
+      const res = await fetch(withBasePath("/api/db-config"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "test", url: dbUrl, authToken: dbToken }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showToast("err", data.error || "Koneksi gagal.");
+      } else {
+        showToast("ok", data.message || "Koneksi berhasil.");
+      }
+    } catch {
+      showToast("err", "Gagal menguji koneksi database.");
+    } finally {
+      setDbTesting(false);
+    }
+  };
+
+  const handleSaveDb = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setDbSaving(true);
+    try {
+      const res = await fetch(withBasePath("/api/db-config"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "save",
+          url: dbUrl,
+          authToken: dbToken,
+          migrateLocal,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showToast("err", data.error || "Gagal menghubungkan database.");
+        return;
+      }
+      setDbToken("");
+      await loadMeta();
+      if (data.redeployTriggered) {
+        showToast(
+          "ok",
+          "Database terhubung & tersimpan ke Vercel. Sinkronisasi aktif dalam ~30-45 detik."
+        );
+      } else {
+        showToast("ok", "Database Cloud (Turso) berhasil dihubungkan dan siap digunakan.");
+      }
+    } catch {
+      showToast("err", "Terjadi kesalahan saat menyimpan konfigurasi database.");
+    } finally {
+      setDbSaving(false);
+    }
+  };
+
   return (
     <AppShell>
       {/* Toast Notification */}
@@ -552,6 +630,7 @@ export default function AdminPage() {
                 { id: "rekap" as const, label: "Edit Rekap & Backup", icon: Table },
                 { id: "master" as const, label: "Kelas & Siswa", icon: Users },
                 { id: "school" as const, label: "Pengaturan & Akun", icon: Buildings },
+                { id: "database" as const, label: "Database", icon: Database },
               ].map((t) => {
                 const Icon = t.icon;
                 const active = tab === t.id;
@@ -908,6 +987,134 @@ export default function AdminPage() {
                     <span>Perbarui Password</span>
                   </button>
                 </form>
+              </section>
+            )}
+
+            {/* TAB 4: PENGATURAN DATABASE CLOUD (TURSO) */}
+            {tab === "database" && (
+              <section className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                <form onSubmit={handleSaveDb} className="card-pro rounded-3xl p-5 space-y-4">
+                  <div className="flex items-center justify-between gap-2">
+                    <h2 className="text-base font-extrabold text-[var(--ink)]">
+                      Hubungkan Database Cloud (Turso)
+                    </h2>
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-extrabold ${
+                        dbStatus?.mode === "turso"
+                          ? "bg-[var(--surface-mint)] text-[var(--canopy)]"
+                          : "bg-amber-100 text-amber-900"
+                      }`}
+                    >
+                      <span
+                        className={`h-2 w-2 rounded-full ${
+                          dbStatus?.mode === "turso" ? "bg-emerald-600" : "bg-amber-600"
+                        }`}
+                      />
+                      {dbStatus?.mode === "turso" ? "Turso Cloud Aktif" : "Penyimpanan Lokal"}
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-[var(--ink-muted)] leading-relaxed">
+                    Masukkan kredensial database Turso (libSQL) milik sekolah agar seluruh data absensi tersimpan permanen tanpa perlu membuka dashboard Vercel.
+                  </p>
+
+                  {dbStatus?.urlMasked && (
+                    <div className="rounded-2xl bg-[var(--bg)] px-4 py-2.5 text-xs">
+                      <span className="font-bold text-[var(--ink-muted)]">URL Aktif: </span>
+                      <span className="font-num font-bold text-[var(--ink)]">{dbStatus.urlMasked}</span>
+                    </div>
+                  )}
+
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-[var(--ink-muted)]">
+                      Database URL (libsql://...)
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={dbUrl}
+                      onChange={(e) => setDbUrl(e.target.value)}
+                      placeholder="libsql://nama-db-sekolah.turso.io"
+                      className="font-num w-full rounded-2xl bg-[var(--bg)] px-4 py-2.5 text-sm font-semibold"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-[var(--ink-muted)]">
+                      Auth Token
+                    </label>
+                    <input
+                      type="password"
+                      required
+                      value={dbToken}
+                      onChange={(e) => setDbToken(e.target.value)}
+                      placeholder="eyJhbGciOi..."
+                      className="font-num w-full rounded-2xl bg-[var(--bg)] px-4 py-2.5 text-sm"
+                    />
+                  </div>
+
+                  <label className="flex items-center gap-2.5 text-xs font-semibold text-[var(--ink)] cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={migrateLocal}
+                      onChange={(e) => setMigrateLocal(e.target.checked)}
+                      className="h-4 w-4 rounded accent-[#0A3D26]"
+                    />
+                    <span>Salin data saat ini ke database baru jika masih kosong</span>
+                  </label>
+
+                  <div className="flex flex-wrap items-center gap-2.5 pt-1">
+                    <button
+                      type="button"
+                      disabled={dbTesting || !dbUrl || !dbToken}
+                      onClick={handleTestDb}
+                      className="btn-tactile inline-flex items-center gap-1.5 rounded-full bg-[var(--surface-mint)] px-4 py-2.5 text-xs font-extrabold text-[var(--canopy)] disabled:opacity-50"
+                    >
+                      <PlugCharging size={16} weight="bold" />
+                      <span>{dbTesting ? "Menguji..." : "Tes Koneksi"}</span>
+                    </button>
+
+                    <button
+                      type="submit"
+                      disabled={dbSaving || !dbUrl || !dbToken}
+                      className="btn-tactile inline-flex items-center gap-1.5 rounded-full bg-[#A3E635] px-5 py-2.5 text-xs font-extrabold text-[#072919] disabled:opacity-50"
+                    >
+                      <FloppyDisk size={16} weight="fill" />
+                      <span>{dbSaving ? "Menghubungkan..." : "Simpan & Hubungkan"}</span>
+                    </button>
+                  </div>
+                </form>
+
+                <div className="card-pro rounded-3xl p-5 space-y-4 self-start">
+                  <h2 className="text-base font-extrabold text-[var(--ink)]">
+                    Ringkasan & Panduan Singkat
+                  </h2>
+
+                  <div className="grid grid-cols-3 gap-2.5">
+                    {[
+                      { label: "Kelas", val: dbStatus?.stats.classes ?? 0 },
+                      { label: "Siswa", val: dbStatus?.stats.students ?? 0 },
+                      { label: "Rekap", val: dbStatus?.stats.rekap ?? 0 },
+                    ].map((s) => (
+                      <div key={s.label} className="rounded-2xl bg-[var(--bg)] p-3 text-center">
+                        <p className="font-num text-xl font-extrabold text-[var(--ink)]">{s.val}</p>
+                        <p className="text-[11px] font-bold text-[var(--ink-muted)]">{s.label}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <ol className="space-y-2 text-xs text-[var(--ink-muted)] leading-relaxed list-decimal list-inside">
+                    <li>
+                      Buat database gratis di <strong className="text-[var(--ink)]">turso.tech</strong> (1 akun gratis cukup untuk ribuan siswa).
+                    </li>
+                    <li>
+                      Salin <strong className="text-[var(--ink)]">Database URL</strong> (<code className="font-num">libsql://...</code>) dan buat <strong className="text-[var(--ink)]">Auth Token</strong> (Read &amp; Write).
+                    </li>
+                    <li>
+                      Tempel di form sebelah, klik <strong className="text-[var(--ink)]">Tes Koneksi</strong>, lalu <strong className="text-[var(--ink)]">Simpan &amp; Hubungkan</strong>.
+                    </li>
+                  </ol>
+                </div>
               </section>
             )}
           </div>

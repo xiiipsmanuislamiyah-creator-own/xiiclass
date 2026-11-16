@@ -16,12 +16,15 @@ export async function POST(req: Request) {
       );
     }
 
-    const db = getDb();
-    const admin = db
-      .prepare("SELECT id, username, password_hash, display_name FROM admins WHERE username = ?")
-      .get(username) as
-      | { id: number; username: string; password_hash: string; display_name: string }
-      | undefined;
+    const db = await getDb();
+    const admin = await db.queryOne<{
+      id: number;
+      username: string;
+      password_hash: string;
+      display_name: string;
+    }>("SELECT id, username, password_hash, display_name FROM admins WHERE username = ?", [
+      username,
+    ]);
 
     if (!admin || !bcrypt.compareSync(password, admin.password_hash)) {
       return NextResponse.json(

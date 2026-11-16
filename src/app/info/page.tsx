@@ -283,10 +283,21 @@ export default function InfoPage() {
                 </a>
 
                 <a
-                  href="https://github.com/rhmt-ofc"
+                  href="https://github.com/xiiipsmanuislamiyah-creator-own/xiiclass"
                   target="_blank"
                   rel="noreferrer"
                   className="btn-tactile inline-flex items-center gap-2 rounded-full bg-[#0B1410] px-4 py-2.5 text-xs font-bold text-white hover:bg-slate-800"
+                >
+                  <GithubLogo size={16} weight="fill" />
+                  <span>Source Code</span>
+                  <ArrowUpRight size={14} weight="bold" />
+                </a>
+
+                <a
+                  href="https://github.com/rhmt-ofc"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-tactile inline-flex items-center gap-2 rounded-full bg-[var(--bg)] px-4 py-2.5 text-xs font-bold text-[var(--ink)] hover:bg-[var(--surface-raised)]"
                 >
                   <GithubLogo size={16} weight="fill" />
                   <span>github.com/rhmt-ofc</span>

@@ -3,16 +3,14 @@ import { getDb } from "@/lib/db";
 import { getAdminSession } from "@/lib/auth";
 
 export async function GET() {
-  const db = getDb();
-  const classes = db
-    .prepare(`
-      SELECT c.id, c.name, c.homeroom_teacher, COUNT(s.id) as student_count
-      FROM classes c
-      LEFT JOIN students s ON s.class_id = c.id
-      GROUP BY c.id
-      ORDER BY c.name ASC
-    `)
-    .all();
+  const db = await getDb();
+  const classes = await db.query(`
+    SELECT c.id, c.name, c.homeroom_teacher, COUNT(s.id) as student_count
+    FROM classes c
+    LEFT JOIN students s ON s.class_id = c.id
+    GROUP BY c.id
+    ORDER BY c.name ASC
+  `);
   return NextResponse.json({ classes });
 }
 
@@ -31,12 +29,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Nama kelas wajib diisi." }, { status: 400 });
     }
 
-    const db = getDb();
-    const res = db
-      .prepare("INSERT INTO classes (name, homeroom_teacher) VALUES (?, ?)")
-      .run(name, homeroomTeacher || "-");
+    const db = await getDb();
+    const res = await db.execute("INSERT INTO classes (name, homeroom_teacher) VALUES (?, ?)", [
+      name,
+      homeroomTeacher || "-",
+    ]);
 
-    return NextResponse.json({ ok: true, id: Number(res.lastInsertRowid) });
+    return NextResponse.json({ ok: true, id: res.lastInsertRowid });
   } catch {
     return NextResponse.json({ error: "Nama kelas sudah ada atau tidak valid." }, { status: 400 });
   }
@@ -55,8 +54,8 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "ID kelas diperlukan." }, { status: 400 });
     }
 
-    const db = getDb();
-    db.prepare("DELETE FROM classes WHERE id = ?").run(id);
+    const db = await getDb();
+    await db.execute("DELETE FROM classes WHERE id = ?", [id]);
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: "Gagal menghapus kelas." }, { status: 500 });
