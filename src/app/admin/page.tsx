@@ -710,14 +710,14 @@ export default function AdminPage() {
                 </div>
 
                 {/* Consistent Formal Editable Table */}
-                <div className="card-pro rounded-3xl overflow-hidden relative z-10">
-                  <div className="overflow-x-auto">
+                <div className="rounded-3xl bg-[var(--surface)] border border-[var(--border)] shadow-[var(--shadow-card)] overflow-hidden relative z-10">
+                  <div className="w-full overflow-x-auto overscroll-x-contain touch-pan-x touch-pan-y">
                     <table className="w-full text-left border-collapse min-w-[680px]">
                       <thead>
                         <tr className="bg-[var(--surface-raised)] border-b border-[var(--border-strong)] text-xs font-bold uppercase tracking-wider text-[var(--ink-muted)]">
                           <th className="py-3.5 px-4 text-right w-12">No</th>
                           <th className="py-3.5 px-3">No. Absen</th>
-                          <th className="py-3.5 px-3 sticky left-0 bg-[var(--surface-raised)] z-10">
+                          <th className="py-3.5 px-3">
                             Nama Siswa
                           </th>
                           <th className="py-3.5 px-2 text-center w-20">Hadir</th>
@@ -736,20 +736,21 @@ export default function AdminPage() {
                             <td className="py-3 px-3 font-num text-xs font-semibold text-[var(--ink-muted)] whitespace-nowrap">
                               {entry.nis}
                             </td>
-                            <td className="py-3 px-3 font-bold text-[var(--ink)] whitespace-nowrap sticky left-0 bg-[var(--surface)] group-hover:bg-[var(--surface-raised)] z-10">
+                            <td className="py-3 px-3 font-bold text-[var(--ink)] whitespace-nowrap">
                               {entry.name}
                             </td>
                             {(["hadir", "sakit", "izin", "alpha"] as const).map((field) => (
                               <td key={field} className="py-2.5 px-2 text-center">
                                 <input
                                   type="number"
+                                  inputMode="numeric"
                                   min={0}
                                   value={entry[field]}
                                   onChange={(e) =>
                                     updateEntryField(entry.student_id, field, e.target.value)
                                   }
                                   aria-label={`${field} ${entry.name}`}
-                                  className="font-num w-16 rounded-xl bg-[var(--bg)] px-2 py-1.5 text-center text-sm font-extrabold text-[var(--ink)]"
+                                  className="font-num w-16 min-h-[40px] rounded-xl bg-[var(--bg)] px-2 py-1.5 text-center text-base sm:text-sm font-extrabold text-[var(--ink)]"
                                 />
                               </td>
                             ))}
@@ -761,7 +762,7 @@ export default function AdminPage() {
                                   updateEntryField(entry.student_id, "note", e.target.value)
                                 }
                                 placeholder="Catatan opsional..."
-                                className="w-full rounded-xl bg-[var(--bg)] px-3 py-1.5 text-xs font-medium text-[var(--ink)]"
+                                className="w-full min-w-[160px] min-h-[40px] rounded-xl bg-[var(--bg)] px-3 py-1.5 text-base sm:text-xs font-medium text-[var(--ink)]"
                               />
                             </td>
                           </tr>
