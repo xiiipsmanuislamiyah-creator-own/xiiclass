@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
@@ -68,6 +68,8 @@ function TypewriterHeading() {
 
 export default function LandingPage() {
   const { navigateWithCurtain } = useCurtainNavigation();
+  const [featuresInView, setFeaturesInView] = useState(false);
+  const featuresRef = useRef<HTMLElement>(null);
   const [stats, setStats] = useState<LiveSummary>({
     attendanceRate: 94.7,
     totalStudents: 18,
@@ -75,6 +77,22 @@ export default function LandingPage() {
     academicYear: "2026/2027",
     semester: "Ganjil",
   });
+
+  useEffect(() => {
+    const el = featuresRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setFeaturesInView(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   useEffect(() => {
     fetch(withBasePath("/api/overview"))
@@ -227,40 +245,50 @@ export default function LandingPage() {
         </section>
 
         {/* 4-Column 3D Perspective Capability Strip */}
-        <section id="fitur" className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-10">
+        <section
+          ref={featuresRef}
+          id="fitur"
+          className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-10"
+        >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               {
                 title: "Multi-Kelas Terpadu",
                 desc: "Ringkasan kehadiran per kelas dengan persentase dan bar komposisi otomatis.",
                 icon: UsersThree,
-                delay: "80ms",
+                delay: "60ms",
               },
               {
                 title: "Review & Admin",
                 desc: "Siswa dan guru bebas memantau rekap; edit data terkunci aman untuk Admin.",
                 icon: ShieldCheck,
-                delay: "160ms",
+                delay: "140ms",
               },
               {
                 title: "Cetak A4 Formal",
                 desc: "Layout A4 Landscape siap cetak lengkap dengan Kop Surat resmi lembaga.",
                 icon: Printer,
-                delay: "240ms",
+                delay: "220ms",
               },
               {
                 title: "Backup & Ekspor XLSX",
                 desc: "Ekspor laporan dan impor ulang backup spreadsheet .xlsx langsung dari Admin.",
                 icon: FileXls,
-                delay: "320ms",
+                delay: "300ms",
               },
             ].map((item) => {
               const Icon = item.icon;
               return (
                 <div
                   key={item.title}
-                  style={{ animationDelay: item.delay }}
-                  className="animate-card-3d card-pro rounded-3xl p-5 space-y-3 cursor-default transition-all duration-200 active:scale-[0.98] hover:shadow-lg"
+                  style={{
+                    animationDelay: item.delay,
+                    opacity: featuresInView ? undefined : 0,
+                    transform: featuresInView ? undefined : "translateY(24px)",
+                  }}
+                  className={`${
+                    featuresInView ? "animate-card-3d" : "opacity-0"
+                  } card-pro rounded-3xl p-5 space-y-3 cursor-default transition-all duration-300 active:scale-[0.98] hover:shadow-lg`}
                 >
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--surface-mint)] text-[var(--canopy)]">
                     <Icon size={22} weight="fill" />
