@@ -61,6 +61,7 @@ function RekapContent() {
   const [classes, setClasses] = useState<ClassInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [excelMode, setExcelMode] = useState(false);
 
   const fetchMeta = useCallback(async () => {
     try {
@@ -189,6 +190,15 @@ function RekapContent() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2.5">
+              <button
+                type="button"
+                onClick={() => setExcelMode(true)}
+                disabled={sortedRows.length === 0}
+                className="btn-tactile inline-flex items-center gap-2 rounded-full bg-white/12 px-4 py-2 text-xs sm:text-sm font-bold text-white ring-1 ring-white/20 backdrop-blur-md hover:bg-white/20 disabled:opacity-50"
+              >
+                <FileXls size={17} weight="bold" className="text-emerald-300" />
+                <span>Tampilan Full Excel</span>
+              </button>
               <button
                 type="button"
                 onClick={handleExportExcel}
@@ -413,6 +423,77 @@ function RekapContent() {
           )}
         </div>
       </div>
+
+      {excelMode && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-white text-slate-900">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-300 bg-[#0A3D26] px-4 py-2.5 text-white">
+            <div className="flex items-center gap-3">
+              <span className="rounded bg-emerald-400/20 px-2 py-0.5 font-mono text-xs font-bold text-emerald-200">
+                XLSX SHEET
+              </span>
+              <span className="text-sm font-bold">
+                Rekap Kehadiran ({selectedClassName}) · {period}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleExportExcel}
+                className="rounded bg-[#A3E635] px-3 py-1.5 text-xs font-extrabold text-[#072919] hover:bg-[#BEF264]"
+              >
+                Download .xlsx
+              </button>
+              <button
+                type="button"
+                onClick={() => setExcelMode(false)}
+                className="rounded border border-white/30 bg-white/10 px-3 py-1.5 text-xs font-bold text-white hover:bg-white/20"
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+          <div className="flex-1 overflow-auto bg-slate-50">
+            <table className="w-full border-collapse text-xs">
+              <thead className="sticky top-0 z-10 bg-slate-200 text-slate-800">
+                <tr>
+                  <th className="border border-slate-300 px-2.5 py-2 text-center font-bold">No</th>
+                  <th className="border border-slate-300 px-2.5 py-2 text-left font-bold">NIS</th>
+                  <th className="sticky left-0 z-20 border border-slate-300 bg-slate-200 px-3 py-2 text-left font-bold">Nama Siswa</th>
+                  <th className="border border-slate-300 px-2 py-2 text-center font-bold">L/P</th>
+                  <th className="border border-slate-300 px-2.5 py-2 text-left font-bold">Kelas</th>
+                  <th className="border border-slate-300 px-2.5 py-2 text-left font-bold">Wali Kelas</th>
+                  <th className="border border-slate-300 bg-emerald-100 px-2.5 py-2 text-center font-bold text-emerald-900">Hadir</th>
+                  <th className="border border-slate-300 bg-amber-100 px-2.5 py-2 text-center font-bold text-amber-900">Sakit</th>
+                  <th className="border border-slate-300 bg-sky-100 px-2.5 py-2 text-center font-bold text-sky-900">Izin</th>
+                  <th className="border border-slate-300 bg-rose-100 px-2.5 py-2 text-center font-bold text-rose-900">Alpha</th>
+                  <th className="border border-slate-300 px-2.5 py-2 text-center font-bold">Total</th>
+                  <th className="border border-slate-300 px-2.5 py-2 text-center font-bold">%</th>
+                  <th className="border border-slate-300 px-3 py-2 text-left font-bold">Catatan</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortedRows.map((row, idx) => (
+                  <tr key={row.student_id} className={idx % 2 === 0 ? "bg-white" : "bg-slate-50/80"}>
+                    <td className="border border-slate-300 px-2.5 py-1.5 text-center font-mono">{idx + 1}</td>
+                    <td className="border border-slate-300 px-2.5 py-1.5 font-mono">{row.nis}</td>
+                    <td className="sticky left-0 z-10 border border-slate-300 bg-inherit px-3 py-1.5 font-semibold whitespace-nowrap">{row.name}</td>
+                    <td className="border border-slate-300 px-2 py-1.5 text-center">{row.gender}</td>
+                    <td className="border border-slate-300 px-2.5 py-1.5 whitespace-nowrap">{row.class_name}</td>
+                    <td className="border border-slate-300 px-2.5 py-1.5 whitespace-nowrap text-slate-600">{row.homeroom_teacher}</td>
+                    <td className="border border-slate-300 px-2.5 py-1.5 text-center font-mono font-bold text-emerald-700">{row.hadir}</td>
+                    <td className="border border-slate-300 px-2.5 py-1.5 text-center font-mono font-bold text-amber-700">{row.sakit}</td>
+                    <td className="border border-slate-300 px-2.5 py-1.5 text-center font-mono font-bold text-sky-700">{row.izin}</td>
+                    <td className="border border-slate-300 px-2.5 py-1.5 text-center font-mono font-bold text-rose-700">{row.alpha}</td>
+                    <td className="border border-slate-300 px-2.5 py-1.5 text-center font-mono">{row.total}</td>
+                    <td className="border border-slate-300 px-2.5 py-1.5 text-center font-mono font-bold">{row.percentage}%</td>
+                    <td className="border border-slate-300 px-3 py-1.5 text-slate-600">{row.note || "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </AppShell>
   );
 }
