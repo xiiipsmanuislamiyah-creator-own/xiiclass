@@ -15,6 +15,7 @@ import {
 import { SplashScreen } from "@/components/SplashScreen";
 import { AmbientBackdrop } from "@/components/AmbientBackdrop";
 import { useCurtainNavigation } from "@/components/TransitionProvider";
+import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { withBasePath } from "@/lib/paths";
 
 interface LiveSummary {
@@ -199,7 +200,7 @@ export default function LandingPage() {
                     Kehadiran
                   </p>
                   <p className="mt-1 font-num text-2xl sm:text-3xl font-extrabold text-[var(--canopy)]">
-                    {stats.attendanceRate}%
+                    <AnimatedCounter value={stats.attendanceRate} decimals={1} suffix="%" />
                   </p>
                 </div>
 
@@ -208,7 +209,7 @@ export default function LandingPage() {
                     Total Siswa
                   </p>
                   <p className="mt-1 font-num text-2xl sm:text-3xl font-extrabold text-[var(--ink)]">
-                    {stats.totalStudents}
+                    <AnimatedCounter value={stats.totalStudents} />
                   </p>
                 </div>
 
@@ -217,7 +218,7 @@ export default function LandingPage() {
                     Multi-Kelas
                   </p>
                   <p className="mt-1 font-num text-2xl sm:text-3xl font-extrabold text-[var(--ink)]">
-                    {stats.totalClasses}
+                    <AnimatedCounter value={stats.totalClasses} />
                   </p>
                 </div>
               </div>

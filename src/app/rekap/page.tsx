@@ -458,7 +458,7 @@ function RekapContent() {
                 <tr>
                   <th className="border border-slate-300 px-2.5 py-2 text-center font-bold">No</th>
                   <th className="border border-slate-300 px-2.5 py-2 text-left font-bold">NIS</th>
-                  <th className="sticky left-0 z-20 border border-slate-300 bg-slate-200 px-3 py-2 text-left font-bold">Nama Siswa</th>
+                  <th className="sticky left-0 z-20 border border-slate-300 bg-slate-200 px-3 py-2 text-left font-bold shadow-[3px_0_6px_-2px_rgba(0,0,0,0.12)]">Nama Siswa</th>
                   <th className="border border-slate-300 px-2 py-2 text-center font-bold">L/P</th>
                   <th className="border border-slate-300 px-2.5 py-2 text-left font-bold">Kelas</th>
                   <th className="border border-slate-300 px-2.5 py-2 text-left font-bold">Wali Kelas</th>
@@ -476,7 +476,7 @@ function RekapContent() {
                   <tr key={row.student_id} className={idx % 2 === 0 ? "bg-white" : "bg-slate-50/80"}>
                     <td className="border border-slate-300 px-2.5 py-1.5 text-center font-mono">{idx + 1}</td>
                     <td className="border border-slate-300 px-2.5 py-1.5 font-mono">{row.nis}</td>
-                    <td className="sticky left-0 z-10 border border-slate-300 bg-inherit px-3 py-1.5 font-semibold whitespace-nowrap">{row.name}</td>
+                    <td className="sticky left-0 z-10 border border-slate-300 bg-inherit px-3 py-1.5 font-semibold whitespace-nowrap shadow-[3px_0_6px_-2px_rgba(0,0,0,0.08)]">{row.name}</td>
                     <td className="border border-slate-300 px-2 py-1.5 text-center">{row.gender}</td>
                     <td className="border border-slate-300 px-2.5 py-1.5 whitespace-nowrap">{row.class_name}</td>
                     <td className="border border-slate-300 px-2.5 py-1.5 whitespace-nowrap text-slate-600">{row.homeroom_teacher}</td>

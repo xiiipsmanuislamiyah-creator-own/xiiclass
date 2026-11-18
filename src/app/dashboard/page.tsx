@@ -19,6 +19,7 @@ import {
 import { AppShell } from "@/components/AppShell";
 import { AmbientBackdrop } from "@/components/AmbientBackdrop";
 import { PeriodPicker } from "@/components/CustomPickers";
+import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { withBasePath } from "@/lib/paths";
 
 interface OverviewData {
@@ -83,12 +84,12 @@ function AttendanceRing({ rate }: { rate: number }) {
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
-          style={{ transition: "stroke-dashoffset 600ms cubic-bezier(0.22, 1, 0.36, 1)" }}
+          style={{ transition: "stroke-dashoffset 900ms cubic-bezier(0.16, 1, 0.3, 1)" }}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
         <span className="font-num text-lg font-extrabold text-white leading-none">
-          {clamped}%
+          <AnimatedCounter value={clamped} decimals={1} suffix="%" />
         </span>
         <span className="mt-0.5 text-[9px] font-bold uppercase tracking-wider text-lime-200/90">
           Hadir
@@ -194,10 +195,10 @@ export default function DashboardPage() {
                 </p>
                 <div className="flex items-baseline gap-3">
                   <h1 className="font-num text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
-                    {loading ? "—" : `${data?.summary.attendance_rate ?? 0}%`}
+                    {loading ? "—" : <AnimatedCounter value={data?.summary.attendance_rate ?? 0} decimals={1} suffix="%" />}
                   </h1>
                   <span className="rounded-full bg-white/15 px-2.5 py-0.5 font-num text-xs font-bold text-emerald-100">
-                    {loading ? "..." : `${data?.summary.total_students ?? 0} Siswa`}
+                    {loading ? "..." : <AnimatedCounter value={data?.summary.total_students ?? 0} suffix=" Siswa" />}
                   </span>
                 </div>
 
@@ -223,19 +224,19 @@ export default function DashboardPage() {
                 <div className="space-y-1.5 text-xs font-semibold text-emerald-100/90">
                   <p className="flex items-center justify-between gap-4">
                     <span>Hadir</span>
-                    <span className="font-num font-bold text-white">{data?.summary.total_hadir ?? 0}</span>
+                    <span className="font-num font-bold text-white"><AnimatedCounter value={data?.summary.total_hadir ?? 0} /></span>
                   </p>
                   <p className="flex items-center justify-between gap-4">
                     <span>Sakit</span>
-                    <span className="font-num font-bold text-amber-200">{data?.summary.total_sakit ?? 0}</span>
+                    <span className="font-num font-bold text-amber-200"><AnimatedCounter value={data?.summary.total_sakit ?? 0} /></span>
                   </p>
                   <p className="flex items-center justify-between gap-4">
                     <span>Izin</span>
-                    <span className="font-num font-bold text-sky-200">{data?.summary.total_izin ?? 0}</span>
+                    <span className="font-num font-bold text-sky-200"><AnimatedCounter value={data?.summary.total_izin ?? 0} /></span>
                   </p>
                   <p className="flex items-center justify-between gap-4">
                     <span>Alpha</span>
-                    <span className="font-num font-bold text-rose-200">{data?.summary.total_alpha ?? 0}</span>
+                    <span className="font-num font-bold text-rose-200"><AnimatedCounter value={data?.summary.total_alpha ?? 0} /></span>
                   </p>
                 </div>
               </div>
@@ -442,7 +443,7 @@ export default function DashboardPage() {
                         </svg>
                         <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                           <span className="font-num text-2xl font-extrabold text-[var(--ink)]">
-                            {totalSessions.toLocaleString("id-ID")}
+                            <AnimatedCounter value={totalSessions} />
                           </span>
                           <span className="text-[11px] font-bold text-[var(--ink-muted)]">
                             Total Sesi
@@ -589,10 +590,10 @@ export default function DashboardPage() {
                   </div>
                   <div className="flex items-baseline justify-between gap-2">
                     <p className="font-num text-2xl font-extrabold text-[var(--ink)]">
-                      {loading ? "—" : item.value.toLocaleString("id-ID")}
+                      {loading ? "—" : <AnimatedCounter value={item.value} />}
                     </p>
                     <span className={`font-num text-xs font-extrabold ${item.fg}`}>
-                      {share}%
+                      <AnimatedCounter value={share} decimals={1} suffix="%" />
                     </span>
                   </div>
                   <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--bg)]">
