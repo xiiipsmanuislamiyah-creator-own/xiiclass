@@ -234,25 +234,25 @@ export default function LandingPage() {
                 title: "Multi-Kelas Terpadu",
                 desc: "Ringkasan kehadiran per kelas dengan persentase dan bar komposisi otomatis.",
                 icon: UsersThree,
-                delay: "420ms",
+                delay: "80ms",
               },
               {
                 title: "Review & Admin",
                 desc: "Siswa dan guru bebas memantau rekap; edit data terkunci aman untuk Admin.",
                 icon: ShieldCheck,
-                delay: "520ms",
+                delay: "160ms",
               },
               {
                 title: "Cetak A4 Formal",
                 desc: "Layout A4 Landscape siap cetak lengkap dengan Kop Surat resmi lembaga.",
                 icon: Printer,
-                delay: "620ms",
+                delay: "240ms",
               },
               {
                 title: "Backup & Ekspor XLSX",
                 desc: "Ekspor laporan dan impor ulang backup spreadsheet .xlsx langsung dari Admin.",
                 icon: FileXls,
-                delay: "720ms",
+                delay: "320ms",
               },
             ].map((item) => {
               const Icon = item.icon;
@@ -260,7 +260,7 @@ export default function LandingPage() {
                 <div
                   key={item.title}
                   style={{ animationDelay: item.delay }}
-                  className="animate-card-3d card-pro rounded-3xl p-5 space-y-3"
+                  className="animate-card-3d card-pro rounded-3xl p-5 space-y-3 cursor-default transition-all duration-200 active:scale-[0.98] hover:shadow-lg"
                 >
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--surface-mint)] text-[var(--canopy)]">
                     <Icon size={22} weight="fill" />
