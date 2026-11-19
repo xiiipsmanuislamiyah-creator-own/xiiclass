@@ -18,6 +18,7 @@ import { useCurtainNavigation } from "@/components/TransitionProvider";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { AnimatedSparkline } from "@/components/AnimatedSparkline";
 import { ScrollRevealCard } from "@/components/ScrollRevealCard";
+import { AutoplayOnScrollVideo } from "@/components/AutoplayOnScrollVideo";
 import { withBasePath } from "@/lib/paths";
 
 interface LiveSummary {
@@ -294,6 +295,29 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
+        </section>
+
+        {/* Interactive In-View Kinetic Showcase Teaser (Autoplay on Scroll) */}
+        <section className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-6">
+          <div className="text-center max-w-2xl mx-auto mb-6 space-y-2">
+            <div className="inline-flex items-center gap-2 rounded-full bg-[#EAF6EE] px-3.5 py-1 text-xs font-extrabold text-[#0A3D26] border border-[#0A3D26]/12 shadow-sm">
+              <span className="h-2 w-2 rounded-full bg-[#10B981] animate-pulse" />
+              <span>SHOWCASE REAL-TIME · AUTOPLAY ON SCROLL</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--ink)]">
+              Antarmuka Responsif, Alur Kerja Nyata
+            </h2>
+            <p className="text-xs sm:text-sm text-[var(--ink-muted)]">
+              Saksikan ringkasan otomatis, interaksi tabel spreadsheet Excel layar penuh, hingga kesiapan cetak A4 formal.
+            </p>
+          </div>
+
+          <AutoplayOnScrollVideo
+            videoSrc="/erekap-kinetic-teaser.mp4"
+            posterSrc="/erekap-kinetic-poster.jpg"
+            urlLabel="rhmt.biz.id/xiiclass"
+            badgeLabel="AUTOPLAY ON VIEWPORT · LIGHT MODE"
+          />
         </section>
 
         {/* 4-Column 3D Perspective Capability Strip (Scroll-Triggered Stagger) */}
