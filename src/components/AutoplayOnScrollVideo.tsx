@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import {
   SpeakerHigh,
   SpeakerSimpleSlash,
@@ -26,7 +26,41 @@ export function AutoplayOnScrollVideo({
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const [isMuted, setIsMuted] = useState<boolean>(true);
+  // Default audio auto on (unmuted)
+  const [isMuted, setIsMuted] = useState<boolean>(false);
+
+  // Resilient unmuted autoplay with seamless browser gesture fallback
+  const attemptPlay = useCallback(async () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = false;
+    try {
+      await video.play();
+      setIsMuted(false);
+    } catch {
+      // Browser autoplay policy blocked unmuted audio -> keep playing muted first
+      video.muted = true;
+      setIsMuted(true);
+      try {
+        await video.play();
+      } catch {
+        // Fallback ignore
+      }
+
+      // Instant unmute on the very first screen touch or click
+      const enableAudioOnGesture = () => {
+        if (videoRef.current) {
+          videoRef.current.muted = false;
+          setIsMuted(false);
+        }
+        window.removeEventListener("click", enableAudioOnGesture);
+        window.removeEventListener("touchstart", enableAudioOnGesture);
+      };
+      window.addEventListener("click", enableAudioOnGesture, { once: true, passive: true });
+      window.addEventListener("touchstart", enableAudioOnGesture, { once: true, passive: true });
+    }
+  }, []);
 
   // Viewport Intersection Observer for Auto-play / Auto-pause
   useEffect(() => {
@@ -38,11 +72,7 @@ export function AutoplayOnScrollVideo({
         entries.forEach((entry) => {
           if (!videoRef.current) return;
           if (entry.isIntersecting) {
-            videoRef.current.muted = true;
-            const playPromise = videoRef.current.play();
-            if (playPromise !== undefined) {
-              playPromise.catch(() => {});
-            }
+            attemptPlay();
           } else {
             videoRef.current.pause();
           }
@@ -56,7 +86,7 @@ export function AutoplayOnScrollVideo({
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [attemptPlay]);
 
   // Toggle Sound (Mute / Unmute)
   const toggleSound = (e: React.MouseEvent) => {
@@ -72,7 +102,7 @@ export function AutoplayOnScrollVideo({
     e.stopPropagation();
     if (!videoRef.current) return;
     videoRef.current.currentTime = 0;
-    videoRef.current.play().catch(() => {});
+    attemptPlay();
   };
 
   return (

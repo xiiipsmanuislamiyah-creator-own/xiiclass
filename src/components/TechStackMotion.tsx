@@ -94,8 +94,13 @@ function TypeScriptIcon({ className = "w-5 h-5" }: { className?: string }) {
 
 function TailwindCssIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" className={className} fill="#0EA5E9" aria-label="Tailwind CSS">
-      <path d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.337 13.382 8.976 12 6.001 12z" />
+    <svg viewBox="0 0 24 24" className={className} fill="none" aria-label="Tailwind CSS">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.337 6.182 14.976 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624 1.177 1.194 2.538 2.576 5.512 2.576 3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C4.337 13.382 2.976 12 6.001 12z"
+        fill="#38BDF8"
+      />
     </svg>
   );
 }
@@ -771,22 +776,19 @@ export function TechStackMotion() {
       </div>
 
       {/* 2-ROW BI-DIRECTIONAL TICKER (Mengalir ke samping saling berlawanan arah tanpa card kaku) */}
-      <div className="w-full max-w-2xl mx-auto mt-4 sm:mt-6 space-y-2.5 overflow-hidden">
+      <div className="w-full max-w-3xl mx-auto mt-5 sm:mt-7 space-y-3 overflow-hidden">
         {/* Row 1: Flowing Left */}
         <div className="relative flex overflow-x-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-          <div className="flex shrink-0 gap-3 py-1 animate-[ticker-left_24s_linear_infinite] hover:[animation-play-state:paused]">
+          <div className="flex shrink-0 gap-3.5 py-1.5 animate-[ticker-left_24s_linear_infinite] hover:[animation-play-state:paused]">
             {[...TECH_NODES, ...TECH_NODES].map((node, idx) => {
               const NodeIcon = node.Icon;
               return (
                 <div
                   key={`r1-${node.id}-${idx}`}
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-[var(--ink)] border border-[var(--border)] shadow-xs select-none"
+                  className="inline-flex items-center gap-2.5 sm:gap-3 rounded-full bg-white px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-bold text-[var(--ink)] border border-[var(--border-strong)] shadow-xs hover:shadow-md hover:border-[#0A3D26]/30 select-none transition-all shrink-0"
                 >
-                  <NodeIcon className="w-4 h-4 shrink-0" />
-                  <span>{node.name}</span>
-                  <span className="text-[10px] font-bold text-[#0F5132] bg-[#E8F5EE] px-2 py-0.5 rounded-full">
-                    {node.badge}
-                  </span>
+                  <NodeIcon className="w-5 h-5 shrink-0" />
+                  <span className="whitespace-nowrap tracking-tight">{node.name}</span>
                 </div>
               );
             })}
@@ -795,7 +797,7 @@ export function TechStackMotion() {
 
         {/* Row 2: Flowing Right */}
         <div className="relative flex overflow-x-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-          <div className="flex shrink-0 gap-3 py-1 animate-[ticker-right_24s_linear_infinite] hover:[animation-play-state:paused]">
+          <div className="flex shrink-0 gap-3.5 py-1.5 animate-[ticker-right_24s_linear_infinite] hover:[animation-play-state:paused]">
             {[
               ...TECH_NODES.slice().reverse(),
               ...TECH_NODES.slice().reverse(),
@@ -804,13 +806,10 @@ export function TechStackMotion() {
               return (
                 <div
                   key={`r2-${node.id}-${idx}`}
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-[var(--ink)] border border-[var(--border)] shadow-xs select-none"
+                  className="inline-flex items-center gap-2.5 sm:gap-3 rounded-full bg-white px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-bold text-[var(--ink)] border border-[var(--border-strong)] shadow-xs hover:shadow-md hover:border-[#0A3D26]/30 select-none transition-all shrink-0"
                 >
-                  <NodeIcon className="w-4 h-4 shrink-0" />
-                  <span>{node.name}</span>
-                  <span className="text-[10px] font-bold text-[#0F5132] bg-[#E8F5EE] px-2 py-0.5 rounded-full">
-                    {node.badge}
-                  </span>
+                  <NodeIcon className="w-5 h-5 shrink-0" />
+                  <span className="whitespace-nowrap tracking-tight">{node.name}</span>
                 </div>
               );
             })}
