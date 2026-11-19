@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
@@ -15,19 +15,9 @@ import {
 import { SplashScreen } from "@/components/SplashScreen";
 import { AmbientBackdrop } from "@/components/AmbientBackdrop";
 import { useCurtainNavigation } from "@/components/TransitionProvider";
-import { AnimatedCounter } from "@/components/AnimatedCounter";
-import { AnimatedSparkline } from "@/components/AnimatedSparkline";
 import { ScrollRevealCard } from "@/components/ScrollRevealCard";
 import { AutoplayOnScrollVideo } from "@/components/AutoplayOnScrollVideo";
 import { withBasePath } from "@/lib/paths";
-
-interface LiveSummary {
-  attendanceRate: number;
-  totalStudents: number;
-  totalClasses: number;
-  academicYear: string;
-  semester: string;
-}
 
 const TYPED_PHRASES = ["Lebih Presisi.", "Lebih Transparan.", "Siap Cetak A4.", "Otomatis & Real-time."];
 
@@ -71,30 +61,6 @@ function TypewriterHeading() {
 
 export default function LandingPage() {
   const { navigateWithCurtain } = useCurtainNavigation();
-  const [stats, setStats] = useState<LiveSummary>({
-    attendanceRate: 94.7,
-    totalStudents: 18,
-    totalClasses: 3,
-    academicYear: "2026/2027",
-    semester: "Ganjil",
-  });
-
-  useEffect(() => {
-    fetch(withBasePath("/api/overview"))
-      .then((r) => r.json())
-      .then((d) => {
-        if (d?.summary) {
-          setStats({
-            attendanceRate: d.summary.attendance_rate ?? 94.7,
-            totalStudents: d.summary.total_students ?? 18,
-            totalClasses: d.classes?.length ?? 3,
-            academicYear: d.school?.academic_year || "2026/2027",
-            semester: d.school?.semester || "Ganjil",
-          });
-        }
-      })
-      .catch(() => {});
-  }, []);
 
   return (
     <>
@@ -153,11 +119,11 @@ export default function LandingPage() {
           </button>
         </header>
 
-        {/* Hero Section with Typewriter & 3D Depth Cards */}
-        <section className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 sm:px-6 pt-8 pb-12 text-center">
+        {/* Hero Section */}
+        <section className="relative z-10 flex flex-col items-center justify-center px-4 sm:px-6 pt-10 sm:pt-14 pb-8 text-center">
           <div className="mx-auto max-w-3xl space-y-6">
             <h1
-              className="animate-cascade text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--ink)] leading-[1.12] min-h-[2.3em] sm:min-h-[2.2em]"
+              className="animate-cascade text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--ink)] leading-[1.12]"
               style={{ animationDelay: "140ms" }}
             >
               Rekap Kehadiran Siswa <br className="hidden sm:inline" />
@@ -173,7 +139,7 @@ export default function LandingPage() {
 
             {/* Primary & Secondary CTAs */}
             <div
-              className="animate-cascade flex flex-wrap items-center justify-center gap-3 pt-1"
+              className="animate-cascade flex flex-wrap items-center justify-center gap-3 pt-2"
               style={{ animationDelay: "300ms" }}
             >
               <button
@@ -194,121 +160,17 @@ export default function LandingPage() {
                 <span>Lihat Tabel Rekap</span>
               </button>
             </div>
-
-            {/* 3D Depth Floating Live Snapshot Strip */}
-            <div className="animate-card-3d pt-4" style={{ animationDelay: "380ms" }}>
-              <div className="mx-auto max-w-2xl sheet-overlap rounded-3xl p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
-                {/* 1. Kehadiran Card + Live Animated SVG Trendline */}
-                <div className="rounded-2xl bg-[var(--bg)] p-3.5 sm:p-4 flex flex-col justify-between gap-2.5">
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
-                        Kehadiran
-                      </p>
-                      <span className="font-num text-[10px] font-bold text-[#15803D] bg-emerald-100/70 rounded-full px-2 py-0.5">
-                        Real-time
-                      </span>
-                    </div>
-                    <p className="mt-1 font-num text-2xl sm:text-3xl font-extrabold text-[var(--canopy)]">
-                      <AnimatedCounter value={stats.attendanceRate} decimals={1} suffix="%" />
-                    </p>
-                  </div>
-                  {/* Animated SVG Trend Line */}
-                  <div className="pt-1 border-t border-[var(--border)]">
-                    <div className="flex items-center justify-between text-[10px] font-semibold text-[var(--ink-muted)] mb-1">
-                      <span>Tren Kehadiran</span>
-                      <span className="font-num font-extrabold text-[#15803D]">Aktif</span>
-                    </div>
-                    <AnimatedSparkline
-                      data={[88.5, 91.0, 89.2, 93.4, 92.8, stats.attendanceRate]}
-                      width={140}
-                      height={32}
-                      strokeColor="#0F5132"
-                      fillColor="rgba(15, 81, 50, 0.14)"
-                      strokeWidth={2.4}
-                      showPulse={true}
-                    />
-                  </div>
-                </div>
-
-                {/* 2. Total Siswa Card + Rombel Capacity Curve */}
-                <div className="rounded-2xl bg-[var(--bg)] p-3.5 sm:p-4 flex flex-col justify-between gap-2.5">
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
-                        Total Siswa
-                      </p>
-                      <span className="font-num text-[10px] font-bold text-slate-700 bg-slate-200/70 rounded-full px-2 py-0.5">
-                        Terdaftar
-                      </span>
-                    </div>
-                    <p className="mt-1 font-num text-2xl sm:text-3xl font-extrabold text-[var(--ink)]">
-                      <AnimatedCounter value={stats.totalStudents} />
-                    </p>
-                  </div>
-                  {/* Micro Capacity Sparkline */}
-                  <div className="pt-1 border-t border-[var(--border)]">
-                    <div className="flex items-center justify-between text-[10px] font-semibold text-[var(--ink-muted)] mb-1">
-                      <span>Kapasitas Rombel</span>
-                      <span className="font-num font-extrabold text-[var(--ink)]">100%</span>
-                    </div>
-                    <AnimatedSparkline
-                      data={[6, 6, 6, 6, 6, 6]}
-                      width={140}
-                      height={32}
-                      strokeColor="#334155"
-                      fillColor="rgba(51, 65, 85, 0.10)"
-                      strokeWidth={2}
-                      showPulse={false}
-                    />
-                  </div>
-                </div>
-
-                {/* 3. Multi-Kelas Card + Distribution Bars */}
-                <div className="rounded-2xl bg-[var(--bg)] p-3.5 sm:p-4 flex flex-col justify-between gap-2.5">
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
-                        Multi-Kelas
-                      </p>
-                      <span className="font-num text-[10px] font-bold text-[#A3E635] bg-[#0A3D26] rounded-full px-2 py-0.5">
-                        Tingkat MA
-                      </span>
-                    </div>
-                    <p className="mt-1 font-num text-2xl sm:text-3xl font-extrabold text-[var(--ink)]">
-                      <AnimatedCounter value={stats.totalClasses} />
-                    </p>
-                  </div>
-                  {/* Rombel Distribution Progress */}
-                  <div className="pt-1 border-t border-[var(--border)] space-y-1.5">
-                    <div className="flex items-center justify-between text-[10px] font-semibold text-[var(--ink-muted)]">
-                      <span>X, XI, XII</span>
-                      <span className="font-num font-extrabold text-[var(--canopy)]">3 Rombel</span>
-                    </div>
-                    <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--border)] flex">
-                      <div style={{ width: "33.3%" }} className="h-full bg-[#0A3D26]" title="X IPA 1" />
-                      <div style={{ width: "33.3%" }} className="h-full bg-[#15803D]" title="XI IPA 1" />
-                      <div style={{ width: "33.4%" }} className="h-full bg-[#A3E635]" title="XII IPS 1" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </section>
 
-        {/* Interactive In-View Kinetic Showcase Teaser (Autoplay on Scroll) */}
-        <section className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-6">
+        {/* Product Showcase Video (Clean High-Craft Frame, No AI Slop Badges) */}
+        <section className="relative z-10 mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8 pt-4 pb-16">
           <div className="text-center max-w-2xl mx-auto mb-6 space-y-2">
-            <div className="inline-flex items-center gap-2 rounded-full bg-[#EAF6EE] px-3.5 py-1 text-xs font-extrabold text-[#0A3D26] border border-[#0A3D26]/14 shadow-xs">
-              <span className="h-2 w-2 rounded-full bg-[#10B981] animate-pulse" />
-              <span>MASTER SHOWREEL 68S · 10 SCENE KINETIK</span>
-            </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--ink)]">
               Antarmuka Responsif, Alur Kerja Nyata
             </h2>
             <p className="text-xs sm:text-sm text-[var(--ink-muted)]">
-              Saksikan 10 alur kinetik: simulasi multi-device responsif, time-remapping roll counter, inspeksi Mode Excel layar penuh, hingga stempel pengesahan formal ber-Kop Madrasah.
+              Pratinjau langsung alur kerja E-Rekap: rekapitulasi kehadiran per kelas, mode tabel Excel layar penuh, hingga stempel pengesahan formal ber-Kop Madrasah.
             </p>
           </div>
 
@@ -316,7 +178,6 @@ export default function LandingPage() {
             videoSrc="/erekap-showreel-web.mp4"
             posterSrc="/erekap-showreel-poster.jpg"
             urlLabel="rhmt.biz.id/xiiclass"
-            badgeLabel="SHOWREEL 68S · 10 SCENE KINETIK"
           />
         </section>
 
