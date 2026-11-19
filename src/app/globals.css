@@ -345,6 +345,59 @@ body {
   animation: pageExitToApp 280ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+@keyframes orbitCw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbitCcw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes streamLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes streamRight {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-orbit-cw {
+  animation: orbitCw 26s linear infinite;
+}
+
+.animate-orbit-ccw {
+  animation: orbitCcw 34s linear infinite;
+}
+
+.animate-orbit-node-cw {
+  animation: orbitCcw 26s linear infinite;
+}
+
+.animate-orbit-node-ccw {
+  animation: orbitCw 34s linear infinite;
+}
+
+.animate-stream-left {
+  display: flex;
+  width: max-content;
+  animation: streamLeft 26s linear infinite;
+}
+
+.animate-stream-right {
+  display: flex;
+  width: max-content;
+  animation: streamRight 26s linear infinite;
+}
+
+.animate-stream-left:hover,
+.animate-stream-right:hover {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .btn-tactile,
   .card-pro,
@@ -353,7 +406,13 @@ body {
   .animate-float-orb,
   .animate-float-orb-rev,
   .animate-spin-slow,
-  .animate-page-exit {
+  .animate-page-exit,
+  .animate-orbit-cw,
+  .animate-orbit-ccw,
+  .animate-orbit-node-cw,
+  .animate-orbit-node-ccw,
+  .animate-stream-left,
+  .animate-stream-right {
     animation: none !important;
     transition: none !important;
     transform: none !important;

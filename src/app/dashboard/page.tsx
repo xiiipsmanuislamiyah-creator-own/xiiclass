@@ -21,6 +21,7 @@ import { AmbientBackdrop } from "@/components/AmbientBackdrop";
 import { PeriodPicker } from "@/components/CustomPickers";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { AnimatedSparkline } from "@/components/AnimatedSparkline";
+import { PreviewPromptModal } from "@/components/PreviewPromptModal";
 import { withBasePath } from "@/lib/paths";
 
 interface OverviewData {
@@ -263,6 +264,7 @@ export default function DashboardPage() {
 
   return (
     <AppShell>
+      <PreviewPromptModal />
       <div className="space-y-5">
         {/* Deep Forest Canopy Hero (Full-bleed mobile, rounded-3xl desktop) */}
         <section

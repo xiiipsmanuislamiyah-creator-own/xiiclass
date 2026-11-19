@@ -17,6 +17,7 @@ import { AmbientBackdrop } from "@/components/AmbientBackdrop";
 import { useCurtainNavigation } from "@/components/TransitionProvider";
 import { ScrollRevealCard } from "@/components/ScrollRevealCard";
 import { AutoplayOnScrollVideo } from "@/components/AutoplayOnScrollVideo";
+import { TechStackMotion } from "@/components/TechStackMotion";
 import { withBasePath } from "@/lib/paths";
 
 const TYPED_PHRASES = ["Lebih Presisi.", "Lebih Transparan.", "Siap Cetak A4.", "Otomatis & Real-time."];
@@ -177,9 +178,13 @@ export default function LandingPage() {
           <AutoplayOnScrollVideo
             videoSrc="/erekap-showreel-web.mp4"
             posterSrc="/erekap-showreel-poster.jpg"
-            urlLabel="rhmt.biz.id/xiiclass"
+            repoUrl="https://github.com/xiiipsmanuislamiyah-creator-own/xiiclass"
+            repoLabel="github.com/xiiipsmanuislamiyah-creator-own/xiiclass"
           />
         </section>
+
+        {/* Dynamic Orbiting & Kinetic Stream Tech Stack (Zero Card Patterns) */}
+        <TechStackMotion />
 
         {/* 4-Column 3D Perspective Capability Strip (Scroll-Triggered Stagger) */}
         <section
