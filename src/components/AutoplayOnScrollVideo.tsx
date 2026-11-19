@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import {
   SpeakerHigh,
   SpeakerSimpleSlash,
   Play,
   Pause,
   ArrowClockwise,
+  CornersOut,
+  CornersIn,
+  DownloadSimple,
 } from "@phosphor-icons/react";
 import { withBasePath } from "@/lib/paths";
 
@@ -30,9 +33,13 @@ export function AutoplayOnScrollVideo({
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(true);
-  const [isUserPaused, setIsUserPaused] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(68);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const [hasError, setHasError] = useState<boolean>(false);
+
+  const resolvedVideoSrc = withBasePath(videoSrc);
+  const resolvedPosterSrc = posterSrc ? withBasePath(posterSrc) : undefined;
 
   // Viewport Intersection Observer for Auto-play / Auto-pause
   useEffect(() => {
@@ -42,52 +49,59 @@ export function AutoplayOnScrollVideo({
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          if (!videoRef.current) return;
           if (entry.isIntersecting) {
-            if (!isUserPaused && videoRef.current) {
-              const playPromise = videoRef.current.play();
-              if (playPromise !== undefined) {
-                playPromise
-                  .then(() => setIsPlaying(true))
-                  .catch(() => {
-                    setIsPlaying(false);
-                  });
-              }
+            // Autoplay muted when scrolled into view
+            videoRef.current.muted = true;
+            const playPromise = videoRef.current.play();
+            if (playPromise !== undefined) {
+              playPromise
+                .then(() => setIsPlaying(true))
+                .catch(() => setIsPlaying(false));
             }
           } else {
-            if (videoRef.current) {
-              videoRef.current.pause();
-              setIsPlaying(false);
-            }
+            videoRef.current.pause();
+            setIsPlaying(false);
           }
         });
       },
-      {
-        threshold: 0.25,
-        rootMargin: "0px 0px -40px 0px",
-      }
+      { threshold: 0.25 }
     );
 
     observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
-    return () => {
-      observer.disconnect();
-    };
-  }, [isUserPaused]);
+  // Safe manual play/pause trigger with fallback
+  const handlePlayToggle = useCallback(async (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    const video = videoRef.current;
+    if (!video) return;
 
-  // Toggle Play / Pause manually
-  const togglePlay = () => {
-    if (!videoRef.current) return;
-    if (isPlaying) {
-      videoRef.current.pause();
+    if (!video.paused) {
+      video.pause();
       setIsPlaying(false);
-      setIsUserPaused(true);
-    } else {
-      videoRef.current.play().then(() => {
-        setIsPlaying(true);
-        setIsUserPaused(false);
-      });
+      return;
     }
-  };
+
+    try {
+      await video.play();
+      setIsPlaying(true);
+      setHasError(false);
+    } catch (err) {
+      console.warn("Autoplay audio blocked, attempting muted fallback:", err);
+      try {
+        video.muted = true;
+        setIsMuted(true);
+        await video.play();
+        setIsPlaying(true);
+        setHasError(false);
+      } catch (fallbackErr) {
+        console.error("Playback failed completely:", fallbackErr);
+        setHasError(true);
+      }
+    }
+  }, []);
 
   // Toggle Sound (Mute / Unmute)
   const toggleSound = (e: React.MouseEvent) => {
@@ -104,10 +118,56 @@ export function AutoplayOnScrollVideo({
     if (!videoRef.current) return;
     videoRef.current.currentTime = 0;
     setCurrentTime(0);
-    videoRef.current.play().then(() => {
-      setIsPlaying(true);
-      setIsUserPaused(false);
-    });
+    videoRef.current
+      .play()
+      .then(() => setIsPlaying(true))
+      .catch(() => setIsPlaying(false));
+  };
+
+  // Interactive Timeline Scrub
+  const handleScrub = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    const video = videoRef.current;
+    if (!video || duration <= 0) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const pct = Math.max(0, Math.min(1, clickX / rect.width));
+    const newTime = pct * duration;
+    video.currentTime = newTime;
+    setCurrentTime(newTime);
+  };
+
+  // Toggle Fullscreen
+  const toggleFullscreen = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const container = containerRef.current;
+    if (!container) return;
+
+    if (!document.fullscreenElement) {
+      if (container.requestFullscreen) {
+        container.requestFullscreen();
+        setIsFullscreen(true);
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+        setIsFullscreen(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handleFsChange = () => {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    };
+    document.addEventListener("fullscreenchange", handleFsChange);
+    return () => document.removeEventListener("fullscreenchange", handleFsChange);
+  }, []);
+
+  const formatTime = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60);
+    return `${m}:${s < 10 ? "0" : ""}${s}`;
   };
 
   const progressPct = duration > 0 ? Math.min(100, (currentTime / duration) * 100) : 0;
@@ -115,24 +175,24 @@ export function AutoplayOnScrollVideo({
   return (
     <div
       ref={containerRef}
-      className={`group relative overflow-hidden rounded-3xl bg-white border border-[#0A3D26]/14 shadow-[0_26px_65px_-16px_rgba(10,61,38,0.18),0_6px_18px_rgba(0,0,0,0.04)] transition-all duration-300 hover:shadow-[0_36px_85px_-18px_rgba(10,61,38,0.24)] ${className}`}
+      className={`group relative overflow-hidden rounded-2xl bg-white border border-[#0A3D26]/16 shadow-[0_20px_60px_-16px_rgba(10,61,38,0.2)] transition-all duration-300 ${className}`}
     >
-      {/* Technical Repository & Showcase Bar (No Fake Browser Chrome) */}
-      <div className="flex h-11 items-center justify-between border-b border-[#0A3D26]/10 bg-[#F8FBF9] px-3 sm:px-4 select-none gap-2">
+      {/* Technical Repository & Showcase Bar (Responsive Mobile & Desktop) */}
+      <div className="flex h-11 items-center justify-between border-b border-[#0A3D26]/12 bg-[#F8FBF9] px-3 sm:px-4 select-none gap-2">
         {/* Left: Project & Format Indicator */}
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           <span className="h-2 w-2 rounded-full bg-[#15803D]" />
-          <span className="font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#0A3D26]/80 whitespace-nowrap">
+          <span className="font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#0A3D26]">
             E-Rekap · Production Preview
           </span>
         </div>
 
-        {/* Right: Functional Repository Anchor Link */}
+        {/* Right: Functional Repository Link */}
         <a
           href={repoUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="group/link inline-flex items-center gap-1.5 sm:gap-2 rounded-lg border border-[#0A3D26]/14 bg-white px-2.5 sm:px-3 py-1 font-mono text-[10px] sm:text-[11px] font-semibold text-[#0A3D26] shadow-2xs hover:border-[#15803D] hover:text-[#15803D] hover:bg-[#F2FBF5] transition-all shrink-0"
+          className="group/link inline-flex items-center gap-1.5 sm:gap-2 rounded-md border border-[#0A3D26]/14 bg-white px-2.5 sm:px-3 py-1 font-mono text-[10px] sm:text-[11px] font-semibold text-[#0A3D26] shadow-2xs hover:border-[#15803D] hover:text-[#15803D] hover:bg-[#F2FBF5] transition-all shrink-0"
           title="Buka Repositori GitHub"
         >
           <svg
@@ -163,21 +223,22 @@ export function AutoplayOnScrollVideo({
 
       {/* Video Viewport Stage */}
       <div
-        className="relative aspect-video w-full cursor-pointer bg-[#F1F5F2] overflow-hidden"
-        onClick={togglePlay}
+        className="relative aspect-video w-full cursor-pointer bg-[#051C12] overflow-hidden"
+        onClick={() => handlePlayToggle()}
         title={isPlaying ? "Klik untuk jeda" : "Klik untuk memutar"}
       >
         <video
           ref={videoRef}
-          src={withBasePath(videoSrc)}
-          poster={posterSrc ? withBasePath(posterSrc) : undefined}
+          src={resolvedVideoSrc}
+          poster={resolvedPosterSrc}
           muted={isMuted}
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           className="h-full w-full object-cover select-none"
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
+          onError={() => setHasError(true)}
           onLoadedMetadata={(e) => {
             const d = e.currentTarget.duration;
             if (Number.isFinite(d) && d > 0) setDuration(d);
@@ -187,60 +248,120 @@ export function AutoplayOnScrollVideo({
           }}
         />
 
-        {/* Subtle Hover Play/Pause Overlay */}
-        <div
-          className={`absolute inset-0 flex items-center justify-center bg-black/15 transition-opacity duration-200 ${
-            isPlaying ? "opacity-0 hover:opacity-100" : "opacity-100"
-          }`}
-        >
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/95 text-[#0A3D26] shadow-xl backdrop-blur-sm transition-transform active:scale-95 hover:scale-105">
-            {isPlaying ? (
-              <Pause size={24} weight="fill" />
-            ) : (
-              <Play size={24} weight="fill" className="ml-1" />
-            )}
+        {/* Center Tactile Play Button Overlay (Active when paused) */}
+        {!isPlaying && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/25 backdrop-blur-[2px] transition-all">
+            <button
+              type="button"
+              onClick={(e) => handlePlayToggle(e)}
+              className="group/btn flex items-center gap-3 rounded-full bg-[#072518] px-5 py-3 text-white shadow-2xl border-2 border-[#A3E635] hover:scale-105 active:scale-95 transition-all"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#A3E635] text-[#072518]">
+                <Play size={20} weight="fill" className="ml-0.5" />
+              </div>
+              <span className="font-mono text-xs sm:text-sm font-bold tracking-wide">
+                Putar Showreel (68s)
+              </span>
+            </button>
+          </div>
+        )}
+
+        {/* Error Fallback Banner */}
+        {hasError && (
+          <div className="absolute top-3 left-3 right-3 bg-red-900/90 text-white text-xs font-mono p-2.5 rounded-lg border border-red-500/50 flex items-center justify-between">
+            <span>Video tidak dapat dimuat langsung di browser ini.</span>
+            <a
+              href={resolvedVideoSrc}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline font-bold text-yellow-300 ml-2"
+            >
+              Buka File MP4
+            </a>
+          </div>
+        )}
+
+        {/* Full-Featured Bottom Control Bar */}
+        <div className="absolute bottom-3 left-3 right-3 z-20 flex items-center justify-between gap-2 bg-[#051C12]/85 backdrop-blur-md border border-white/10 rounded-xl px-3 py-1.5 text-white shadow-lg">
+          {/* Left Controls: Play/Pause & Time */}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={(e) => handlePlayToggle(e)}
+              aria-label={isPlaying ? "Jeda" : "Putar"}
+              className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 hover:bg-[#A3E635] hover:text-[#072518] transition-colors"
+            >
+              {isPlaying ? (
+                <Pause size={16} weight="fill" />
+              ) : (
+                <Play size={16} weight="fill" className="ml-0.5" />
+              )}
+            </button>
+
+            <span className="font-mono text-[11px] text-emerald-200">
+              {formatTime(currentTime)} / {formatTime(duration)}
+            </span>
+          </div>
+
+          {/* Right Controls: Mute, Restart, Fullscreen */}
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={toggleSound}
+              aria-label={isMuted ? "Aktifkan suara" : "Bisukan suara"}
+              className={`flex h-8 items-center gap-1.5 rounded-lg px-2 text-xs font-mono font-bold transition-all ${
+                isMuted
+                  ? "bg-white/10 text-slate-300 hover:bg-white/20"
+                  : "bg-[#A3E635] text-[#072518]"
+              }`}
+            >
+              {isMuted ? (
+                <>
+                  <SpeakerSimpleSlash size={16} weight="bold" />
+                  <span className="hidden sm:inline text-[10px]">Bisu</span>
+                </>
+              ) : (
+                <>
+                  <SpeakerHigh size={16} weight="fill" />
+                  <span className="hidden sm:inline text-[10px]">Suara</span>
+                </>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleRestart}
+              aria-label="Ulangi dari awal"
+              className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+              title="Ulangi video"
+            >
+              <ArrowClockwise size={15} weight="bold" />
+            </button>
+
+            <button
+              type="button"
+              onClick={toggleFullscreen}
+              aria-label="Layar penuh"
+              className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+              title="Layar Penuh"
+            >
+              {isFullscreen ? (
+                <CornersIn size={15} weight="bold" />
+              ) : (
+                <CornersOut size={15} weight="bold" />
+              )}
+            </button>
           </div>
         </div>
 
-        {/* Bottom Floating Control Bar */}
-        <div className="absolute bottom-4 right-4 z-10 flex items-center gap-2">
-          {/* Sound Toggle Button */}
-          <button
-            type="button"
-            onClick={toggleSound}
-            aria-label={isMuted ? "Aktifkan suara" : "Bisukan suara"}
-            className="flex h-9 items-center gap-1.5 rounded-full bg-white/95 px-3.5 text-xs font-bold text-[#0A3D26] shadow-md backdrop-blur-md border border-[#0A3D26]/12 hover:bg-white active:scale-95 transition-all"
-            title={isMuted ? "Aktifkan Suara" : "Bisukan Suara"}
-          >
-            {isMuted ? (
-              <>
-                <SpeakerSimpleSlash size={16} weight="bold" className="text-slate-500" />
-                <span className="hidden sm:inline text-[11px]">Bisu</span>
-              </>
-            ) : (
-              <>
-                <SpeakerHigh size={16} weight="fill" className="text-[#15803D]" />
-                <span className="hidden sm:inline text-[11px] text-[#15803D]">Suara Aktif</span>
-              </>
-            )}
-          </button>
-
-          {/* Restart Button */}
-          <button
-            type="button"
-            onClick={handleRestart}
-            aria-label="Ulangi dari awal"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-[#0A3D26] shadow-md backdrop-blur-md border border-[#0A3D26]/12 hover:bg-white active:scale-95 transition-all"
-            title="Putar Ulang Video"
-          >
-            <ArrowClockwise size={16} weight="bold" />
-          </button>
-        </div>
-
-        {/* Live Smooth Scrub Progress Bar */}
-        <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-black/25 overflow-hidden z-20">
+        {/* Clickable / Draggable Interactive Timeline Scrubber */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-2 bg-black/40 cursor-pointer z-30 group/scrub hover:h-3 transition-all"
+          onClick={handleScrub}
+          title="Geser waktu video"
+        >
           <div
-            className="h-full bg-gradient-to-r from-[#0F5132] via-[#10B981] to-[#A3E635] transition-all duration-100 ease-linear shadow-[0_0_8px_#A3E635]"
+            className="h-full bg-gradient-to-r from-[#10B981] to-[#A3E635] shadow-[0_0_8px_#A3E635]"
             style={{ width: `${progressPct}%` }}
           />
         </div>
