@@ -13,6 +13,7 @@ import {
   Buildings,
   MapPin,
   IdentificationCard,
+  MonitorPlay,
 } from "@phosphor-icons/react";
 import { AppShell } from "@/components/AppShell";
 import { AmbientBackdrop } from "@/components/AmbientBackdrop";
@@ -199,6 +200,148 @@ export default function InfoPage() {
                   </div>
                 );
               })}
+            </div>
+          </section>
+
+          {/* 1.5. Panduan Visual & Video Showcase E-Rekap */}
+          <section
+            aria-label="Panduan Visual & Video Showcase"
+            className="card-pro rounded-3xl p-5 sm:p-7 space-y-6 animate-cascade"
+            style={{ animationDelay: "70ms" }}
+          >
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--border)] pb-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--surface-mint)] text-[var(--canopy)] ring-1 ring-[var(--border-strong)]">
+                    <MonitorPlay size={16} weight="fill" />
+                  </span>
+                  <p className="text-xs font-bold uppercase tracking-wider text-[var(--canopy)]">
+                    Panduan Interaktif
+                  </p>
+                </div>
+                <h2 className="text-lg sm:text-xl font-extrabold text-[var(--ink)]">
+                  Video Panduan & Alur Penggunaan
+                </h2>
+                <p className="text-xs sm:text-sm text-[var(--ink-muted)]">
+                  Simulasi alur operasional E-Rekap: dari review harian, manajemen filter kelas, hingga ekspor laporan.
+                </p>
+              </div>
+              <div className="flex items-center gap-2 self-start sm:self-auto">
+                <span className="font-num inline-flex items-center gap-1.5 rounded-full bg-[var(--surface-mint)] px-3 py-1 text-xs font-extrabold text-[var(--canopy)]">
+                  <span className="h-2 w-2 rounded-full bg-[var(--canopy)] animate-pulse" />
+                  Durasi 60 Detik
+                </span>
+                <span className="font-num rounded-full bg-black/5 px-2.5 py-1 text-[11px] font-bold text-[var(--ink-muted)]">
+                  720p HD • 5.0 MB
+                </span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              {/* Kolom Kiri: Responsive Phone Device Mockup Frame */}
+              <div className="lg:col-span-5 flex justify-center">
+                <div className="relative w-full max-w-[280px] sm:max-w-[310px] rounded-[36px] bg-[#0E1713] p-2.5 sm:p-3 shadow-[0_20px_50px_-15px_rgba(10,61,38,0.4),0_0_0_1px_rgba(255,255,255,0.1)_inset] ring-1 ring-black/30">
+                  {/* Speaker Notch Accent */}
+                  <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 flex items-center justify-center gap-1.5 h-4 w-20 rounded-full bg-black/80 px-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500/80" />
+                    <div className="h-1 w-6 rounded-full bg-white/20" />
+                  </div>
+
+                  {/* Video Container (9:16 Aspect Ratio) */}
+                  <div className="relative aspect-[9/16] w-full overflow-hidden rounded-[26px] bg-black">
+                    <video
+                      controls
+                      playsInline
+                      preload="none"
+                      poster={withBasePath("/erekap-showcase-poster.jpg")}
+                      className="h-full w-full object-cover"
+                    >
+                      <source src={withBasePath("/erekap-showcase.mp4")} type="video/mp4" />
+                      Browser Anda tidak mendukung pemutar video HTML5.
+                    </video>
+                  </div>
+
+                  {/* Home Bar Indicator Accent */}
+                  <div className="mt-2 flex justify-center">
+                    <div className="h-1 w-24 rounded-full bg-white/30" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Kolom Kanan: 4 Tahapan Inti yang Diperagakan di Video */}
+              <div className="lg:col-span-7 space-y-4">
+                <div className="space-y-1">
+                  <p className="text-xs font-extrabold uppercase tracking-wider text-[var(--canopy)]">
+                    Ringkasan Alur Sistem
+                  </p>
+                  <h3 className="text-base sm:text-lg font-extrabold text-[var(--ink)]">
+                    4 Fitur Utama yang Ditunjukkan dalam Video
+                  </h3>
+                </div>
+
+                <div className="grid grid-cols-1 gap-3">
+                  {[
+                    {
+                      step: "01",
+                      title: "Tinjau Rekap Tanpa Login",
+                      desc: "Akses publik langsung menampilkan persentase hadir, sakit, izin, dan alpha secara real-time.",
+                      badge: "Akses Publik",
+                    },
+                    {
+                      step: "02",
+                      title: "Navigasi Cepat per Kelas",
+                      desc: "Pilih filter instan untuk beralih antar rombel (X IPA, XI IPA, XII IPS) dengan performa responsif.",
+                      badge: "Filter Rombel",
+                    },
+                    {
+                      step: "03",
+                      title: "Input & Koreksi Terproteksi",
+                      desc: "Modifikasi absensi tersentralisasi di Panel Admin dengan autentikasi kata sandi terenkripsi.",
+                      badge: "Admin Enkripsi",
+                    },
+                    {
+                      step: "04",
+                      title: "Format Excel & Cetak Dokumen",
+                      desc: "Dukungan penuh impor/ekspor .xlsx serta cetak langsung Kop Surat resmi madrasah ukuran A4.",
+                      badge: "Export & Cetak",
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.step}
+                      className="flex items-start gap-3.5 rounded-2xl bg-[var(--surface-raised)] border border-[var(--border)] p-3.5 sm:p-4 transition-all duration-150 hover:border-[var(--border-strong)] hover:shadow-xs"
+                    >
+                      <span className="font-num flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[var(--surface-mint)] text-xs font-extrabold text-[var(--canopy)] ring-1 ring-[var(--border-strong)]">
+                        {item.step}
+                      </span>
+                      <div className="flex-1 min-w-0 space-y-0.5">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-sm font-extrabold text-[var(--ink)] truncate">
+                            {item.title}
+                          </p>
+                          <span className="font-num shrink-0 rounded-md bg-[var(--bg)] px-2 py-0.5 text-[10px] font-bold text-[var(--ink-muted)] border border-[var(--border)]">
+                            {item.badge}
+                          </span>
+                        </div>
+                        <p className="text-xs text-[var(--ink-muted)] leading-relaxed">
+                          {item.desc}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3 pt-2 text-xs text-[var(--ink-muted)]">
+                  <span className="flex items-center gap-1.5 font-semibold">
+                    <ShieldCheck size={16} weight="fill" className="text-[var(--canopy)]" />
+                    Kompatibel di semua browser HP & Desktop
+                  </span>
+                  <span className="h-1 w-1 rounded-full bg-[var(--border-strong)] hidden sm:inline-block" />
+                  <span className="flex items-center gap-1.5 font-semibold">
+                    <Database size={16} weight="fill" className="text-[var(--canopy)]" />
+                    Fast-start streaming (langsung play tanpa lag)
+                  </span>
+                </div>
+              </div>
             </div>
           </section>
 
