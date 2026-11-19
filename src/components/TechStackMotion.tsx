@@ -1,20 +1,20 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 // Official brand SVG vector icons (Mathematically accurate paths)
-function NextJsIcon({ className = "w-6 h-6" }: { className?: string }) {
+function NextJsIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
     <svg viewBox="0 0 180 180" className={className} fill="none" aria-label="Next.js">
-      <circle cx="90" cy="90" r="90" fill="#000" />
+      <circle cx="90" cy="90" r="90" fill="#0F172A" />
       <path
         d="M149.508 157.52L69.142 54H54V125.97H66.1136V69.3836L139.999 164.845C143.333 162.614 146.509 160.165 149.508 157.52Z"
-        fill="url(#paint0_linear_next)"
+        fill="url(#paint0_linear_next_clean)"
       />
-      <rect fill="url(#paint1_linear_next)" height="72" width="12" x="115" y="54" />
+      <rect fill="url(#paint1_linear_next_clean)" height="72" width="12" x="115" y="54" />
       <defs>
         <linearGradient
-          id="paint0_linear_next"
+          id="paint0_linear_next_clean"
           gradientUnits="userSpaceOnUse"
           x1="109"
           x2="144.5"
@@ -25,7 +25,7 @@ function NextJsIcon({ className = "w-6 h-6" }: { className?: string }) {
           <stop offset="1" stopColor="white" stopOpacity="0" />
         </linearGradient>
         <linearGradient
-          id="paint1_linear_next"
+          id="paint1_linear_next_clean"
           gradientUnits="userSpaceOnUse"
           x1="121"
           x2="120.799"
@@ -40,11 +40,11 @@ function NextJsIcon({ className = "w-6 h-6" }: { className?: string }) {
   );
 }
 
-function ReactIcon({ className = "w-6 h-6" }: { className?: string }) {
+function ReactIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
     <svg viewBox="-11.5 -10.23174 23 20.46348" className={className} aria-label="React">
-      <circle cx="0" cy="0" r="2.05" fill="#61DAFB" />
-      <g stroke="#61DAFB" strokeWidth="1" fill="none">
+      <circle cx="0" cy="0" r="2.05" fill="#087EA4" />
+      <g stroke="#087EA4" strokeWidth="1" fill="none">
         <ellipse rx="11" ry="4.2" />
         <ellipse rx="11" ry="4.2" transform="rotate(60)" />
         <ellipse rx="11" ry="4.2" transform="rotate(120)" />
@@ -53,7 +53,34 @@ function ReactIcon({ className = "w-6 h-6" }: { className?: string }) {
   );
 }
 
-function TypeScriptIcon({ className = "w-6 h-6" }: { className?: string }) {
+// Official SQLite Logo (Devicon: Classic Blue Database Container & Cyan Feather)
+function SqliteIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 128 128" className={className} aria-label="SQLite">
+      <defs>
+        <linearGradient id="sqlite-official-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop stopColor="#95D7F4" offset="0%" />
+          <stop stopColor="#0F7FCC" offset="92%" />
+          <stop stopColor="#0F7FCC" offset="100%" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M69.5 99.176c-.059-.73-.094-1.2-.094-1.2S67.2 83.087 64.57 78.642c-.414-.707.043-3.594 1.207-7.88.68 1.169 3.54 6.192 4.118 7.81.648 1.824.78 2.347.78 2.347s-1.57-8.082-4.144-12.797a162.286 162.286 0 012.004-6.265c.973 1.71 3.313 5.859 3.828 7.3.102.293.192.543.27.774.023-.137.05-.274.074-.414-.59-2.504-1.75-6.86-3.336-10.082 3.52-18.328 15.531-42.824 27.84-53.754H16.9c-5.387 0-9.789 4.406-9.789 9.789v88.57c0 5.383 4.406 9.789 9.79 9.789h52.897a118.657 118.657 0 01-.297-14.652"
+        fill="#0B7FCC"
+      />
+      <path
+        d="M65.777 70.762c.68 1.168 3.54 6.188 4.117 7.809.649 1.824.781 2.347.781 2.347s-1.57-8.082-4.144-12.797a164.535 164.535 0 012.004-6.27c.887 1.567 2.922 5.169 3.652 6.872l.082-.961c-.648-2.496-1.633-5.766-2.898-8.328 3.242-16.871 13.68-38.97 24.926-50.898H16.899a6.94 6.94 0 00-6.934 6.933v82.11c17.527-6.731 38.664-12.88 56.855-12.614-.672-2.605-1.441-4.96-2.25-6.324-.414-.707.043-3.597 1.207-7.879"
+        fill="url(#sqlite-official-grad)"
+      />
+      <path
+        d="M115.95 2.781c-5.5-4.906-12.164-2.933-18.734 2.899a44.347 44.347 0 00-2.914 2.859c-11.25 11.926-21.684 34.023-24.926 50.895 1.262 2.563 2.25 5.832 2.894 8.328.168.64.32 1.242.442 1.754.285 1.207.437 1.996.437 1.996s-.101-.383-.515-1.582c-.078-.23-.168-.484-.27-.773-.043-.125-.105-.274-.172-.434-.734-1.703-2.765-5.305-3.656-6.867-.762 2.25-1.437 4.36-2.004 6.265 2.578 4.715 4.149 12.797 4.149 12.797s-.137-.523-.782-2.347c-.578-1.621-3.441-6.64-4.117-7.809-1.164 4.281-1.625 7.172-1.207 7.88.809 1.362 1.574 3.722 2.25 6.323 1.524 5.867 2.586 13.012 2.586 13.012s.031.469.094 1.2a118.653 118.653 0 00.297 14.651c.504 6.11 1.453 11.363 2.664 14.172l.828-.449c-1.781-5.535-2.504-12.793-2.188-21.156.48-12.793 3.422-28.215 8.856-44.289 9.191-24.27 21.938-43.738 33.602-53.035-10.633 9.602-25.023 40.684-29.332 52.195-4.82 12.891-8.238 24.984-10.301 36.574 3.55-10.863 15.047-15.53 15.047-15.53s5.637-6.958 12.227-16.888c-3.95.903-10.43 2.442-12.598 3.352-3.2 1.344-4.067 1.8-4.067 1.8s10.371-6.312 19.27-9.171c12.234-19.27 25.562-46.648 12.141-58.621"
+        fill="#003956"
+      />
+    </svg>
+  );
+}
+
+function TypeScriptIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-label="TypeScript">
       <rect width="24" height="24" rx="3.5" fill="#3178C6" />
@@ -65,35 +92,27 @@ function TypeScriptIcon({ className = "w-6 h-6" }: { className?: string }) {
   );
 }
 
-function TailwindCssIcon({ className = "w-6 h-6" }: { className?: string }) {
+function TailwindCssIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" className={className} fill="#38BDF8" aria-label="Tailwind CSS">
-      <path d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.337 6.182 14.976 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624 1.177 1.194 2.538 2.576 5.512 2.576 3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.337 13.382 8.976 12 6.001 12z" />
+    <svg viewBox="0 0 24 24" className={className} fill="#0EA5E9" aria-label="Tailwind CSS">
+      <path d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.337 13.382 8.976 12 6.001 12z" />
     </svg>
   );
 }
 
-function SqliteIcon({ className = "w-6 h-6" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="#003B57" aria-label="SQLite">
-      <path d="M12.186 2.04c-.454.004-.908.06-1.348.168-3.05.748-4.992 3.195-5.385 6.096-.197 1.455.087 2.822.756 4.02.668 1.198 1.696 2.15 2.894 2.88 2.398 1.46 5.342 2.115 8.16 1.748 1.41-.184 2.766-.677 3.96-1.468.324-.214.542-.564.582-.95.04-.386-.1-.77-.384-1.036-.284-.266-.67-.374-1.05-.292-1.034.225-2.1.31-3.16.25-2.485-.14-4.838-.99-6.84-2.44-.999-.724-1.84-1.64-2.41-2.71-.57-1.07-.78-2.31-.56-3.52.44-2.43 2.1-4.39 4.47-5.11 2.37-.72 4.98-.16 6.84 1.47.78.69 1.41 1.52 1.86 2.45.45.93.68 1.95.68 2.99 0 .5-.05 1-.15 1.49-.08.4.1.8.46 1.03.36.23.82.2 1.16-.07.34-.27.5-.7.42-1.13-.15-.79-.24-1.6-.24-2.42 0-1.42-.36-2.82-1.03-4.08-.67-1.26-1.62-2.35-2.76-3.19-2.02-1.49-4.52-2.16-7.01-2.14z" />
-    </svg>
-  );
-}
-
-function TurbopackIcon({ className = "w-6 h-6" }: { className?: string }) {
+function TurbopackIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" aria-label="Turbopack">
       <defs>
-        <linearGradient id="turbo_gradient_hud" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+        <linearGradient id="turbo_gradient_tech_light" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
           <stop stopColor="#0070F3" />
           <stop offset="1" stopColor="#FF0080" />
         </linearGradient>
       </defs>
-      <circle cx="12" cy="12" r="9.5" stroke="url(#turbo_gradient_hud)" strokeWidth="2.5" />
+      <circle cx="12" cy="12" r="9.5" stroke="url(#turbo_gradient_tech_light)" strokeWidth="2.5" />
       <path
         d="M12 6.5V12l4 3.5"
-        stroke="url(#turbo_gradient_hud)"
+        stroke="url(#turbo_gradient_tech_light)"
         strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -102,7 +121,7 @@ function TurbopackIcon({ className = "w-6 h-6" }: { className?: string }) {
   );
 }
 
-function RemotionIcon({ className = "w-6 h-6" }: { className?: string }) {
+function RemotionIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
     <svg viewBox="0 0 250 250" className={className} fill="#0B84F3" aria-label="Remotion">
       <g>
@@ -120,340 +139,681 @@ function RemotionIcon({ className = "w-6 h-6" }: { className?: string }) {
   );
 }
 
-function SheetJsIcon({ className = "w-6 h-6" }: { className?: string }) {
+function SheetJsIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" className={className} fill="#217346" aria-label="SheetJS XLSX">
+    <svg viewBox="0 0 24 24" className={className} fill="#107C41" aria-label="SheetJS XLSX">
       <path d="M21.17 2.06H6.83A2.83 2.83 0 004 4.89v14.22a2.83 2.83 0 002.83 2.83h14.34A2.83 2.83 0 0024 19.11V4.89a2.83 2.83 0 00-2.83-2.83zm-7.67 15.5l-2.05-3.56-2.06 3.56H7.13l3.22-5.11-3.06-4.95h2.32l1.89 3.38 1.88-3.38h2.32l-3.06 4.95 3.22 5.11h-2.36z" />
     </svg>
   );
 }
 
-interface TechNode {
+export interface TechNode {
   id: string;
   name: string;
-  version: string;
-  layer: string;
-  tagline: string;
-  description: string;
-  specBenchmark: string;
-  specFootprint: string;
-  specImplementation: string;
-  pipelineConnection: string;
-  brandColor: string;
+  badge: string;
+  ringIndex: number;
+  initialPhase: number;
+  speed: number;
   Icon: React.ComponentType<{ className?: string }>;
 }
 
 const TECH_NODES: TechNode[] = [
   {
-    id: "react",
-    name: "React 19",
-    version: "v19.3.0",
-    layer: "CORE UI ARCHITECTURE",
-    tagline: "Concurrent Server Components & Zero-Bundle Tables",
-    description:
-      "Merender tabel rekap kehadiran siswa (40+ baris per kelas) secara penuh di sisi server. Komponen HTML dikirim siap tayang tanpa beban komputasi JavaScript hydration di browser HP siswa/guru.",
-    specBenchmark: "< 8ms Initial Render",
-    specFootprint: "0 KB Client JS Impact",
-    specImplementation: "Server Components & Server Actions",
-    pipelineConnection: "Menerima payload SQLite WAL → Streaming langsung ke DOM",
-    brandColor: "#61DAFB",
-    Icon: ReactIcon,
-  },
-  {
     id: "next",
     name: "Next.js 16",
-    version: "v16.4.6",
-    layer: "RUNTIME & APPLICATION ROUTER",
-    tagline: "App Router Production Hub & Edge Optimization",
-    description:
-      "Menangani routing modular sub-path (/xiiclass), layout nesting terpadu antar halaman rekap, sesi otentikasi role-based, dan caching statis instan.",
-    specBenchmark: "100% Sub-Path Isolation",
-    specFootprint: "Zero Route Latency",
-    specImplementation: "Turbopack Bundler Engine",
-    pipelineConnection: "Menjaga session cookie terenkripsi → Dispatch API internal",
-    brandColor: "#FFFFFF",
+    badge: "App Router",
+    ringIndex: 0,
+    initialPhase: 0.2,
+    speed: 0.012,
     Icon: NextJsIcon,
+  },
+  {
+    id: "react",
+    name: "React 19",
+    badge: "Server Comps",
+    ringIndex: 0,
+    initialPhase: 0.2 + (2 * Math.PI) / 3,
+    speed: 0.012,
+    Icon: ReactIcon,
   },
   {
     id: "sqlite",
     name: "SQLite Local",
-    version: "v3.45 (libsql)",
-    layer: "LOCAL PERSISTENCE ENGINE",
-    tagline: "Zero-Latency Embedded Database dengan WAL Mode",
-    description:
-      "Menyimpan rekapitulasi kehadiran harian madrasah langsung di filesystem lokal berformat single-file. Mendukung konkurensi Write-Ahead Logging (WAL) tanpa dependensi server database terpisah yang boros RAM.",
-    specBenchmark: "Zero Socket Latency",
-    specFootprint: "Single-File ACID Reliability",
-    specImplementation: "better-sqlite3 & WAL Mode",
-    pipelineConnection: "Data Absensi → Ditulis atomik ke disk lokal",
-    brandColor: "#0078D7",
+    badge: "WAL Mode",
+    ringIndex: 0,
+    initialPhase: 0.2 + (4 * Math.PI) / 3,
+    speed: 0.012,
     Icon: SqliteIcon,
   },
   {
     id: "turbopack",
     name: "Turbopack",
-    version: "v4.3 Native Rust",
-    layer: "COMPILATION ENGINE",
-    tagline: "Sub-Second Incremental Compilation & Fast HMR",
-    description:
-      "Engine kompilasi berbasis Rust yang menggantikan Webpack. Memproses perubahan CSS dan komponen tabel secara inkremental dalam hitungan milidetik tanpa jeda reload yang lama.",
-    specBenchmark: "< 50ms Incremental HMR",
-    specFootprint: "Rust Native Binary",
-    specImplementation: "@tailwindcss/turbopack",
-    pipelineConnection: "Mendeteksi modifikasi kode → Live Hot-Module Replacement",
-    brandColor: "#0070F3",
+    badge: "Rust Engine",
+    ringIndex: 1,
+    initialPhase: 0.4,
+    speed: 0.011,
     Icon: TurbopackIcon,
   },
   {
     id: "typescript",
     name: "TypeScript",
-    version: "v5.7 Strict",
-    layer: "STATIC TYPE SYSTEM",
-    tagline: "Strict Type Safety & Invariant Data Contracts",
-    description:
-      "Memastikan setiap mutasi kehadiran, kalkulasi persentase alpa/izin/sakit, dan struktur ekspor A4 terkunci dengan skema tipe ketat. Mencegah bug runtime data siswa sebelum sampai ke produksi.",
-    specBenchmark: "100% Strict Type Coverage",
-    specFootprint: "Compile-Time Guard",
-    specImplementation: "Zod Schema Validation",
-    pipelineConnection: "Memvalidasi input guru → Menjamin integritas tabel",
-    brandColor: "#3178C6",
+    badge: "Strict Safe",
+    ringIndex: 1,
+    initialPhase: Math.PI + 0.4,
+    speed: 0.011,
     Icon: TypeScriptIcon,
   },
   {
     id: "tailwind",
-    name: "Tailwind CSS v4",
-    version: "v4.3.3 Oxide",
-    layer: "DESIGN TOKENS & STYLING",
-    tagline: "Engine CSS Berbasis Token Semantik Bebas AI-Slop",
-    description:
-      "Menerapkan palet resmi Forest Canopy (#072417) dan Lime (#A3E635) dengan WCAG AAA contrast ratio. Seluruh token dideklarasikan pada :root tanpa ad-hoc hex acak, responsif mulus dari 375px hingga 4K.",
-    specBenchmark: "< 14 KB Compiled CSS",
-    specFootprint: "Pure CSS Variables",
-    specImplementation: "Tailwind v4 Oxide Engine",
-    pipelineConnection: "Memberi styling adaptif pada tabel, modal, dan frame preview",
-    brandColor: "#38BDF8",
+    name: "Tailwind v4",
+    badge: "Oxide CSS",
+    ringIndex: 2,
+    initialPhase: 0.8,
+    speed: 0.012,
     Icon: TailwindCssIcon,
   },
   {
     id: "sheetjs",
-    name: "SheetJS (XLSX)",
-    version: "v0.18.5",
-    layer: "SPREADSHEET GENERATION",
-    tagline: "Ekspor Format Cetak Formal A4 Langsung di Client",
-    description:
-      "Membangun file spreadsheet Excel (.xlsx) dengan struktur kolom formal: nomor induk, nama, kehadiran rinci, rekapitulasi persentase, dan kolom stempel pengesahan Kop Madrasah.",
-    specBenchmark: "Instant Instant A4 Buffer",
-    specFootprint: "Direct Binary ArrayBuffer",
-    specImplementation: "xlsx.writeFileXLSX",
-    pipelineConnection: "Data Rekap Siswa → Diunduh sebagai format resmi Excel",
-    brandColor: "#217346",
+    name: "SheetJS",
+    badge: "A4 XLSX",
+    ringIndex: 2,
+    initialPhase: 0.8 + (2 * Math.PI) / 3,
+    speed: 0.012,
     Icon: SheetJsIcon,
   },
   {
     id: "remotion",
-    name: "Remotion Engine",
-    version: "v4.0.540",
-    layer: "PROGRAMMATIC MOTION VIDEO",
-    tagline: "Video Showcase & Showreel 60 FPS Terprogram",
-    description:
-      "Merender video walkthrough antarmuka E-Rekap dengan animasi kinetik presisi frame-by-frame. Mengotomasi pembuatan teaser dan dokumentasi fitur tanpa software video editor manual.",
-    specBenchmark: "60 FPS Render Fidelity",
-    specFootprint: "Code-as-Video Pipeline",
-    specImplementation: "Remotion React Canvas",
-    pipelineConnection: "DOM Rekapitulasi → Diubah menjadi frame video MP4",
-    brandColor: "#0B84F3",
+    name: "Remotion",
+    badge: "60 FPS Video",
+    ringIndex: 2,
+    initialPhase: 0.8 + (4 * Math.PI) / 3,
+    speed: 0.012,
     Icon: RemotionIcon,
   },
 ];
 
+// Mathematical 3D Matrix Helpers
+const RING_ANGLES = [-55 * Math.PI / 180, 0, 55 * Math.PI / 180];
+const RING_COLORS = [
+  "rgba(15, 81, 50, 0.35)",
+  "rgba(10, 61, 38, 0.40)",
+  "rgba(15, 81, 50, 0.35)",
+];
+const RING_BEAM_SPEEDS = [2.4, 2.7, 2.5]; // All positive: coherent and forward-moving
+
+function transform3D(
+  x0: number,
+  y0: number,
+  z0: number,
+  yaw: number,
+  pitch: number,
+  fov = 550
+) {
+  const cosY = Math.cos(yaw),
+    sinY = Math.sin(yaw);
+  const x1 = x0 * cosY + z0 * sinY;
+  const y1 = y0;
+  const z1 = z0 * cosY - x0 * sinY;
+
+  const cosP = Math.cos(pitch),
+    sinP = Math.sin(pitch);
+  const x2 = x1;
+  const y2 = y1 * cosP - z1 * sinP;
+  const z2 = z1 * cosP + y1 * sinP;
+
+  const scale = fov / (fov + z2);
+  return { x: x2, y: y2, z: z2, scale };
+}
+
+function getOrbitPoint3D(
+  semiA: number,
+  semiB: number,
+  rotAngle: number,
+  t: number
+) {
+  const ex = semiA * Math.cos(t);
+  const ey = semiB * Math.sin(t);
+  const x0 = ex * Math.cos(rotAngle) - ey * Math.sin(rotAngle);
+  const y0 = ex * Math.sin(rotAngle) + ey * Math.cos(rotAngle);
+  const z0 = -semiA * Math.sin(t) * 0.7;
+  return { x: x0, y: y0, z: z0 };
+}
+
 export function TechStackMotion() {
-  const [activeIdx, setActiveIdx] = useState<number>(0);
-  const activeNode = TECH_NODES[activeIdx];
-  const ActiveIcon = activeNode.Icon;
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const nodeRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const stage = stageRef.current;
+    if (!canvas || !stage) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let stageWidth = stage.clientWidth || 340;
+    let stageHeight = stage.clientHeight || 340;
+    let dpr = window.devicePixelRatio || 1;
+
+    function resize() {
+      if (!stage || !canvas || !ctx) return;
+      const rect = stage.getBoundingClientRect();
+      stageWidth = rect.width || 340;
+      stageHeight = rect.height || 340;
+      dpr = window.devicePixelRatio || 1;
+      canvas.width = stageWidth * dpr;
+      canvas.height = stageHeight * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    // Interactive Drag / Swipe camera controls
+    let isDragging = false;
+    let startX = 0,
+      startY = 0;
+    let camYaw = 0;
+    let camPitch = 0;
+    let targetYaw = 0;
+    let targetPitch = 0;
+
+    const onPointerDown = (e: PointerEvent) => {
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      stage.setPointerCapture(e.pointerId);
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      startX = e.clientX;
+      startY = e.clientY;
+      targetYaw += dx * 0.008;
+      targetPitch = Math.max(
+        -Math.PI * 0.44,
+        Math.min(Math.PI * 0.44, targetPitch + dy * 0.008)
+      );
+    };
+
+    const onPointerEnd = (e: PointerEvent) => {
+      if (isDragging) {
+        isDragging = false;
+        try {
+          stage.releasePointerCapture(e.pointerId);
+        } catch (_) {}
+        // SETELAH DIGESER: Otomatis kembali ke posisi awal yang simetris, pas, dan nyaman dilihat
+        targetYaw = 0;
+        targetPitch = 0;
+      }
+    };
+
+    stage.addEventListener("pointerdown", onPointerDown);
+    stage.addEventListener("pointermove", onPointerMove);
+    stage.addEventListener("pointerup", onPointerEnd);
+    stage.addEventListener("pointercancel", onPointerEnd);
+    stage.addEventListener("pointerleave", onPointerEnd);
+
+    // Spherical Fibonacci Points for 3D ASCII Globe
+    const NUM_GLYPHS = 460;
+    const spherePoints: {
+      nx: number;
+      ny: number;
+      nz: number;
+      isEquator: boolean;
+      idx: number;
+    }[] = [];
+    const goldenRatio = (1 + Math.sqrt(5)) / 2;
+
+    for (let i = 0; i < NUM_GLYPHS; i++) {
+      const theta = (2 * Math.PI * i) / goldenRatio;
+      const phi = Math.acos(1 - (2 * (i + 0.5)) / NUM_GLYPHS);
+      const nx = Math.cos(theta) * Math.sin(phi);
+      const ny = Math.cos(phi);
+      const nz = Math.sin(theta) * Math.sin(phi);
+      const isEquator = Math.abs(ny) < 0.14;
+      spherePoints.push({ nx, ny, nz, isEquator, idx: i });
+    }
+
+    // Micro-Sparks for subtle spatial radiance (Stardust / Quantum atmosphere)
+    const NUM_SPARKS = 26;
+    const sparks: {
+      theta: number;
+      distRatio: number;
+      speed: number;
+      zRatio: number;
+      baseAlpha: number;
+      size: number;
+      seed: number;
+    }[] = [];
+    for (let s = 0; s < NUM_SPARKS; s++) {
+      sparks.push({
+        theta: Math.random() * Math.PI * 2,
+        distRatio: 0.85 + Math.random() * 0.75,
+        speed: 0.003 + Math.random() * 0.005,
+        zRatio: (Math.random() - 0.5) * 1.2,
+        baseAlpha: 0.18 + Math.random() * 0.28,
+        size: 0.6 + Math.random() * 0.7,
+        seed: Math.random() * 10,
+      });
+    }
+
+    const nodePhases = TECH_NODES.map((n) => n.initialPhase);
+
+    let sphereAngleY = 0;
+    let globalTime = 0;
+    let animId: number;
+
+    function render() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, stageWidth, stageHeight);
+      const centerX = stageWidth / 2;
+      const centerY = stageHeight / 2;
+
+      const semiA = stageWidth * 0.41;
+      const semiB = semiA * 0.37;
+      const sphereRadius = semiA * 0.36;
+
+      // Smooth camera interpolation: saat dilepas, kembali halus ke 0, 0
+      camYaw += (targetYaw - camYaw) * 0.08;
+      camPitch += (targetPitch - camPitch) * 0.08;
+
+      // CINCIN STATIS: TIDAK ADA rotasi otomatis cincin kamera. Cincin tetap diam & rapi!
+      sphereAngleY += 0.01;
+      globalTime += 0.016;
+
+      // ==========================================
+      // 0. BLUEPRINT RETICLE & SCHEMATIC GRID
+      // Menghilangkan kesan kosong dengan watermark teknis arsitektur transparan
+      // ==========================================
+      ctx.save();
+      // Outer calibration circle (Garis ukur presisi luar)
+      ctx.strokeStyle = "rgba(15, 81, 50, 0.09)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, semiA * 1.08, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Inner calibration circle (Garis putus-putus presisi dalam)
+      ctx.strokeStyle = "rgba(15, 81, 50, 0.07)";
+      ctx.setLineDash([3, 6]);
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, semiA * 0.65, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]); // Reset dash
+
+      // Crosshair coordinate lines (Sumbu koordinat tipis)
+      ctx.strokeStyle = "rgba(15, 81, 50, 0.08)";
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      // Horizontal axis
+      ctx.moveTo(centerX - semiA * 1.16, centerY);
+      ctx.lineTo(centerX - sphereRadius * 1.15, centerY);
+      ctx.moveTo(centerX + sphereRadius * 1.15, centerY);
+      ctx.lineTo(centerX + semiA * 1.16, centerY);
+      // Vertical axis
+      ctx.moveTo(centerX, centerY - semiA * 1.16);
+      ctx.lineTo(centerX, centerY - sphereRadius * 1.15);
+      ctx.moveTo(centerX, centerY + sphereRadius * 1.15);
+      ctx.lineTo(centerX, centerY + semiA * 1.16);
+      ctx.stroke();
+
+      // Coordinate degree markers (000°, 090°, 180°, 270°)
+      ctx.font = '500 7.5px "JetBrains Mono", monospace';
+      ctx.fillStyle = "rgba(15, 81, 50, 0.22)";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("000°", centerX + semiA * 1.12, centerY - 8);
+      ctx.fillText("180°", centerX - semiA * 1.12, centerY - 8);
+      ctx.fillText("090°", centerX + 12, centerY + semiA * 1.12);
+      ctx.fillText("270°", centerX + 12, centerY - semiA * 1.12);
+
+      // Corner blueprint registration marks (+)
+      const cornerOffset = stageWidth * 0.44;
+      const crossSz = 4.5;
+      [
+        [-1, -1],
+        [1, -1],
+        [-1, 1],
+        [1, 1],
+      ].forEach(([sx, sy]) => {
+        const cx = centerX + sx * cornerOffset;
+        const cy = centerY + sy * cornerOffset;
+        ctx.strokeStyle = "rgba(15, 81, 50, 0.14)";
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.moveTo(cx - crossSz, cy);
+        ctx.lineTo(cx + crossSz, cy);
+        ctx.moveTo(cx, cy - crossSz);
+        ctx.lineTo(cx, cy + crossSz);
+        ctx.stroke();
+      });
+      ctx.restore();
+
+      // ==========================================
+      // 1. SPATIAL MICRO-SPARKS RADIANCE (Stardust Atmosfir)
+      // Partikel halus melayang lembut mengisi kedalaman ruang
+      // ==========================================
+      sparks.forEach((sp) => {
+        sp.theta += sp.speed;
+        const dist = sphereRadius * sp.distRatio;
+        const x = Math.cos(sp.theta) * dist;
+        const y = Math.sin(sp.theta) * (dist * 0.78);
+        const z = sp.zRatio * sphereRadius;
+        const p = transform3D(x, y, z, camYaw, camPitch);
+        const px = centerX + p.x * p.scale;
+        const py = centerY + p.y * p.scale;
+
+        const flicker = 0.7 + 0.3 * Math.sin(globalTime * 3 + sp.seed);
+        const alpha =
+          sp.baseAlpha *
+          flicker *
+          (0.5 + 0.5 * ((p.z + semiA * 0.7) / (semiA * 1.4)));
+
+        ctx.fillStyle = `rgba(16, 185, 129, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(px, py, sp.size * p.scale, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // ==========================================
+      // 2. 3 RUTHERFORD ATOMIC ORBIT RINGS & DUAL PHOTON PULSE
+      // Foton ganda meluncur seimbang di seberang orbit (180° phase)
+      // ==========================================
+      RING_ANGLES.forEach((rotAngle, idx) => {
+        ctx.strokeStyle = RING_COLORS[idx];
+        ctx.lineWidth = 1.35;
+        ctx.beginPath();
+        const STEPS = 90;
+        for (let s = 0; s <= STEPS; s++) {
+          const t = (s / STEPS) * Math.PI * 2;
+          const pt3D = getOrbitPoint3D(semiA, semiB, rotAngle, t);
+          const p = transform3D(pt3D.x, pt3D.y, pt3D.z, camYaw, camPitch);
+          const px = centerX + p.x * p.scale;
+          const py = centerY + p.y * p.scale;
+          if (s === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+
+        // DUAL PHOTON PULSES (Foton primer & foton sekunder di seberangnya, meluncur searah)
+        const leadT =
+          (globalTime * RING_BEAM_SPEEDS[idx] + idx * 2.1) % (Math.PI * 2);
+        const dualPulses = [leadT, (leadT + Math.PI) % (Math.PI * 2)];
+
+        dualPulses.forEach((pulseT, pIdx) => {
+          const isSecondary = pIdx === 1;
+          const TRAIL_LEN = isSecondary ? 12 : 16;
+          for (let j = 0; j < TRAIL_LEN; j++) {
+            const segT = pulseT - j * 0.038;
+            const pt3D = getOrbitPoint3D(semiA, semiB, rotAngle, segT);
+            const p = transform3D(pt3D.x, pt3D.y, pt3D.z, camYaw, camPitch);
+            const px = centerX + p.x * p.scale;
+            const py = centerY + p.y * p.scale;
+
+            const alpha =
+              Math.pow(1 - j / TRAIL_LEN, 1.8) * (isSecondary ? 0.65 : 0.85);
+            const sz =
+              (isSecondary ? 0.6 : 0.75) * (1 - j / TRAIL_LEN) + 0.22;
+            ctx.fillStyle = `rgba(15, 81, 50, ${alpha})`;
+            ctx.beginPath();
+            ctx.arc(px, py, sz, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // Head photon bead
+          const head3D = getOrbitPoint3D(semiA, semiB, rotAngle, pulseT);
+          const pH = transform3D(head3D.x, head3D.y, head3D.z, camYaw, camPitch);
+          const pxH = centerX + pH.x * pH.scale;
+          const pyH = centerY + pH.y * pH.scale;
+
+          ctx.fillStyle = "#0A3D26";
+          ctx.beginPath();
+          ctx.arc(pxH, pyH, isSecondary ? 1.3 : 1.6, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.strokeStyle = isSecondary
+            ? "rgba(16, 185, 129, 0.55)"
+            : "rgba(16, 185, 129, 0.8)";
+          ctx.lineWidth = 0.85;
+          ctx.beginPath();
+          ctx.arc(pxH, pyH, isSecondary ? 2.6 : 3.2, 0, Math.PI * 2);
+          ctx.stroke();
+        });
+      });
+
+      // ==========================================
+      // 3. CRISP OPTICAL EMISSION (Soft ambient wash)
+      // ==========================================
+      const subtleAura = ctx.createRadialGradient(
+        centerX,
+        centerY,
+        sphereRadius * 0.2,
+        centerX,
+        centerY,
+        sphereRadius * 1.05
+      );
+      subtleAura.addColorStop(0, "rgba(16, 185, 129, 0.08)");
+      subtleAura.addColorStop(0.85, "rgba(15, 81, 50, 0.03)");
+      subtleAura.addColorStop(1, "rgba(15, 81, 50, 0)");
+      ctx.fillStyle = subtleAura;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, sphereRadius * 1.05, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Sharp radiant photonic rim
+      ctx.strokeStyle = "rgba(15, 81, 50, 0.28)";
+      ctx.lineWidth = 1.1;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, sphereRadius * 1.02, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // ==========================================
+      // 4. RENDER CORE SPHERE (3D ASCII ART)
+      // ==========================================
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      const tilt = 0.22;
+
+      const cosY = Math.cos(sphereAngleY);
+      const sinY = Math.sin(sphereAngleY);
+      const cosT = Math.cos(tilt);
+      const sinT = Math.sin(tilt);
+
+      const projected = spherePoints.map((p) => {
+        const x0 = p.nx * sphereRadius;
+        const y0 = p.ny * sphereRadius;
+        const z0 = p.nz * sphereRadius;
+
+        const x1 = x0 * cosY - z0 * sinY;
+        const z1 = z0 * cosY + x0 * sinY;
+        const y2 = y0 * cosT - z1 * sinT;
+        const z2 = z1 * cosT + y0 * sinT;
+
+        const camPt = transform3D(x1, y2, z2, camYaw, camPitch);
+        const px = centerX + camPt.x * camPt.scale;
+        const py = centerY + camPt.y * camPt.scale;
+        const normZ = (camPt.z + sphereRadius) / (2 * sphereRadius);
+
+        return {
+          px,
+          py,
+          z: camPt.z,
+          normZ,
+          isEquator: p.isEquator,
+          idx: p.idx,
+        };
+      });
+
+      projected.sort((a, b) => a.z - b.z);
+
+      projected.forEach((p) => {
+        const normZ = Math.max(0, Math.min(1, p.normZ));
+        let char: string;
+        if (p.isEquator) {
+          char = p.idx % 2 === 0 ? "1" : "0";
+        } else if (normZ > 0.85) {
+          char = ["#", "@", "%", "*"][p.idx % 4];
+        } else if (normZ > 0.6) {
+          char = ["+", "*", "=", "x"][p.idx % 4];
+        } else if (normZ > 0.35) {
+          char = [":", "-", "~"][p.idx % 3];
+        } else {
+          char = "·";
+        }
+
+        const fontSize = Math.floor(5.5 + normZ * 4.5);
+        ctx.font = `bold ${fontSize}px "JetBrains Mono", monospace`;
+
+        const alpha = 0.3 + Math.pow(normZ, 1.2) * 0.7;
+        if (p.isEquator) {
+          ctx.fillStyle = `rgba(10, 61, 38, ${alpha})`;
+        } else if (normZ > 0.65) {
+          ctx.fillStyle = `rgba(15, 81, 50, ${alpha})`;
+        } else if (normZ > 0.35) {
+          ctx.fillStyle = `rgba(21, 128, 61, ${alpha * 0.85})`;
+        } else {
+          ctx.fillStyle = `rgba(71, 85, 105, ${alpha * 0.45})`;
+        }
+
+        ctx.fillText(char, p.px, p.py);
+      });
+
+      // ==========================================
+      // 5. 8 OFFICIAL BRAND NODES ON ORBITS
+      // ==========================================
+      TECH_NODES.forEach((node, i) => {
+        nodePhases[i] += node.speed;
+        const rotAngle = RING_ANGLES[node.ringIndex];
+        const pt3D = getOrbitPoint3D(semiA, semiB, rotAngle, nodePhases[i]);
+        const p = transform3D(pt3D.x, pt3D.y, pt3D.z, camYaw, camPitch);
+
+        const px = centerX + p.x * p.scale;
+        const py = centerY + p.y * p.scale;
+
+        const el = nodeRefs.current[i];
+        if (el) {
+          el.style.left = `${px}px`;
+          el.style.top = `${py}px`;
+          const nodeScale = (
+            0.85 +
+            0.3 * ((p.z + semiA * 0.7) / (semiA * 1.4))
+          ).toFixed(2);
+          el.style.transform = `translate(-50%, -50%) scale(${nodeScale})`;
+          el.style.zIndex = p.z > 0 ? "30" : "2";
+          el.style.opacity = (
+            0.75 +
+            0.25 * ((p.z + semiA * 0.7) / (semiA * 1.4))
+          ).toFixed(2);
+        }
+      });
+
+      animId = requestAnimationFrame(render);
+    }
+
+    render();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
+      stage.removeEventListener("pointerdown", onPointerDown);
+      stage.removeEventListener("pointermove", onPointerMove);
+      stage.removeEventListener("pointerup", onPointerEnd);
+      stage.removeEventListener("pointercancel", onPointerEnd);
+      stage.removeEventListener("pointerleave", onPointerEnd);
+    };
+  }, []);
 
   return (
-    <section className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-      {/* Section Header: Anti-Slop, High-Craft Editorial */}
-      <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 space-y-2.5">
-        <div className="inline-flex items-center gap-2 border border-[#0A3D26]/20 bg-[#F4F9F5] px-3 py-1 rounded-md">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#15803D]" />
-          <span className="font-mono text-[11px] font-bold tracking-widest uppercase text-[#0A3D26]">
-            FONDASI & TEKNOLOGI
-          </span>
-        </div>
-        <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[var(--ink)]">
-          Arsitektur Kinerja Tinggi
+    <section className="relative z-10 mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 select-none">
+      {/* Editorial Section Header: Pure Typography, Zero Capsule Badges, Anti-Slop */}
+      <div className="text-center max-w-xl mx-auto mb-5 sm:mb-7">
+        <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--ink)]">
+          The Stack
         </h2>
-        <p className="text-xs sm:text-sm text-[var(--ink-muted)] max-w-lg mx-auto leading-relaxed">
-          Pilih modul di bawah untuk memeriksa anatomi runtime, persistensi lokal, dan jalur data operasional E-Rekap.
+        <p className="text-xs sm:text-sm text-[var(--ink-muted)] max-w-md mx-auto leading-relaxed mt-2">
+          Fondasi arsitektur modern yang mentenagai kalkulasi rekapitulasi, persistensi lokal, dan ekspor instan E-Rekap.
         </p>
       </div>
 
-      {/* THE HARDWARE-STYLE WORKBENCH STAGE (Bukan Grid Card Kotak-Kotak Biasa!) */}
-      <div className="rounded-2xl border-2 border-[#0A3D26]/25 bg-[#051C12] text-white shadow-[0_20px_50px_-12px_rgba(5,28,18,0.5)] overflow-hidden">
-        {/* Top Control Bar: Mechanical Selector Ribbon */}
-        <div className="border-b border-[#0A3D26]/60 bg-[#03130C] px-3 py-2.5 sm:px-5 sm:py-3">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-[#A3E635] animate-pulse" />
-              <span className="font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#A3E635]">
-                ENGINEERING TELEMETRY DOCK
-              </span>
-            </div>
-            <span className="hidden sm:inline font-mono text-[10px] text-emerald-300/60">
-              KLIK MODUL UNTUK INSPEKSI LANGSUNG
-            </span>
-          </div>
+      {/* THE 3D RUTHERFORD ATOM STAGE (Transparent Base with Blueprint Reticle & Dual Photon Orbit) */}
+      <div className="relative mx-auto w-full max-w-[420px] aspect-square overflow-hidden cursor-grab active:cursor-grabbing">
+        <div ref={stageRef} className="relative w-full h-full touch-none">
+          <canvas
+            ref={canvasRef}
+            className="absolute inset-0 w-full h-full block"
+          />
 
-          {/* Tactile Hardware Selector Pads (Horizontal Scroll on Mobile, Grid on Desktop) */}
-          <div className="flex sm:grid sm:grid-cols-4 lg:grid-cols-8 gap-1.5 sm:gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none select-none">
-            {TECH_NODES.map((node, idx) => {
+          {/* 8 Floating Brand Nodes on Orbit (Crisp Elevated White Discs) */}
+          {TECH_NODES.map((node, i) => {
+            const NodeIcon = node.Icon;
+            return (
+              <div
+                key={node.id}
+                ref={(el) => {
+                  nodeRefs.current[i] = el;
+                }}
+                title={node.name}
+                className="absolute w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center p-2.5 bg-white border border-[#DFE5E0] shadow-[0_4px_14px_rgba(10,61,38,0.08)] select-none hover:scale-110 transition-transform"
+                style={{
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              >
+                <NodeIcon className="w-full h-full" />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 2-ROW BI-DIRECTIONAL TICKER (Mengalir ke samping saling berlawanan arah tanpa card kaku) */}
+      <div className="w-full max-w-2xl mx-auto mt-4 sm:mt-6 space-y-2.5 overflow-hidden">
+        {/* Row 1: Flowing Left */}
+        <div className="relative flex overflow-x-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+          <div className="flex shrink-0 gap-3 py-1 animate-[ticker-left_24s_linear_infinite] hover:[animation-play-state:paused]">
+            {[...TECH_NODES, ...TECH_NODES].map((node, idx) => {
               const NodeIcon = node.Icon;
-              const isActive = activeIdx === idx;
               return (
-                <button
-                  key={node.id}
-                  type="button"
-                  onClick={() => setActiveIdx(idx)}
-                  className={`flex-shrink-0 flex items-center sm:flex-col justify-center sm:justify-start gap-2 sm:gap-1.5 rounded-lg px-2.5 py-2 sm:p-2 text-left transition-all duration-150 ${
-                    isActive
-                      ? "bg-[#0A3D26] text-white ring-1 ring-[#A3E635] shadow-[0_0_12px_rgba(163,230,53,0.2)]"
-                      : "bg-[#072518]/60 text-emerald-200/70 hover:bg-[#072518] hover:text-white border border-[#0A3D26]/40"
-                  }`}
+                <div
+                  key={`r1-${node.id}-${idx}`}
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-[var(--ink)] border border-[var(--border)] shadow-xs select-none"
                 >
-                  <div className="h-5 w-5 sm:h-6 sm:w-6 flex items-center justify-center shrink-0">
-                    <NodeIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-                  </div>
-                  <div className="min-w-0">
-                    <span className="block font-mono text-[11px] sm:text-[10px] font-bold truncate">
-                      {node.name}
-                    </span>
-                  </div>
-                  {isActive && (
-                    <span className="hidden sm:block h-1 w-full bg-[#A3E635] rounded-full mt-1" />
-                  )}
-                </button>
+                  <NodeIcon className="w-4 h-4 shrink-0" />
+                  <span>{node.name}</span>
+                  <span className="text-[10px] font-bold text-[#0F5132] bg-[#E8F5EE] px-2 py-0.5 rounded-full">
+                    {node.badge}
+                  </span>
+                </div>
               );
             })}
           </div>
         </div>
 
-        {/* The Live Diagnostic Screen (Inspector Display Bay) */}
-        <div className="p-4 sm:p-7 relative overflow-hidden bg-gradient-to-b from-[#072417] to-[#04160E]">
-          {/* Subtle Technical Grid Lines Texture */}
-          <div
-            className="absolute inset-0 pointer-events-none opacity-5"
-            style={{
-              backgroundImage:
-                "linear-gradient(#A3E635 1px, transparent 1px), linear-gradient(90deg, #A3E635 1px, transparent 1px)",
-              backgroundSize: "24px 24px",
-            }}
-          />
-
-          <div className="relative z-10 space-y-6">
-            {/* Display Header Status */}
-            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#0A3D26]/60 pb-3">
-              <div className="flex items-center gap-2">
-                <span className="font-mono text-[10px] sm:text-xs font-bold text-[#A3E635] bg-[#0A3D26] px-2.5 py-0.5 rounded border border-[#A3E635]/30">
-                  {activeNode.layer}
-                </span>
-                <span className="font-mono text-[10px] text-emerald-300/70">
-                  SYS_ID // 0{activeIdx + 1}
-                </span>
-              </div>
-              <div className="font-mono text-[10px] text-emerald-300/80">
-                VERSI: <span className="font-bold text-white">{activeNode.version}</span>
-              </div>
-            </div>
-
-            {/* Main Stage: Asymmetrical Dynamic Inspection */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-6 items-start">
-              {/* Left Column: Official Logo Chamber (Glow in True Brand Color) */}
-              <div className="md:col-span-4 flex flex-col items-center justify-center p-6 rounded-xl bg-[#03140C] border border-[#0A3D26]/70 shadow-inner text-center">
+        {/* Row 2: Flowing Right */}
+        <div className="relative flex overflow-x-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+          <div className="flex shrink-0 gap-3 py-1 animate-[ticker-right_24s_linear_infinite] hover:[animation-play-state:paused]">
+            {[
+              ...TECH_NODES.slice().reverse(),
+              ...TECH_NODES.slice().reverse(),
+            ].map((node, idx) => {
+              const NodeIcon = node.Icon;
+              return (
                 <div
-                  className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl flex items-center justify-center p-3 mb-3 border border-white/10 transition-transform duration-300 hover:scale-110"
-                  style={{
-                    backgroundColor: "rgba(10, 61, 38, 0.4)",
-                    boxShadow: `0 0 24px -4px ${activeNode.brandColor}33`,
-                  }}
+                  key={`r2-${node.id}-${idx}`}
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-[var(--ink)] border border-[var(--border)] shadow-xs select-none"
                 >
-                  <ActiveIcon className="h-12 w-12 sm:h-14 sm:w-14" />
-                </div>
-                <h3 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-                  {activeNode.name}
-                </h3>
-                <span className="font-mono text-[11px] font-semibold text-[#A3E635] mt-1">
-                  {activeNode.tagline}
-                </span>
-              </div>
-
-              {/* Right Column: Architectural Role & Precision Spec Table */}
-              <div className="md:col-span-8 space-y-4">
-                <div>
-                  <h4 className="font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-emerald-300/70 mb-1.5">
-                    Peran Operasional di E-Rekap:
-                  </h4>
-                  <p className="text-sm sm:text-base text-emerald-100/90 leading-relaxed font-sans">
-                    {activeNode.description}
-                  </p>
-                </div>
-
-                {/* Technical Spec Matrix Strip */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2">
-                  <div className="rounded-lg bg-[#03140C]/90 border border-[#0A3D26]/70 p-3">
-                    <span className="block font-mono text-[9px] uppercase tracking-wider text-emerald-300/60">
-                      BENCHMARK
-                    </span>
-                    <span className="block font-mono text-xs sm:text-sm font-bold text-[#A3E635] mt-0.5">
-                      {activeNode.specBenchmark}
-                    </span>
-                  </div>
-
-                  <div className="rounded-lg bg-[#03140C]/90 border border-[#0A3D26]/70 p-3">
-                    <span className="block font-mono text-[9px] uppercase tracking-wider text-emerald-300/60">
-                      FOOTPRINT
-                    </span>
-                    <span className="block font-mono text-xs sm:text-sm font-bold text-white mt-0.5">
-                      {activeNode.specFootprint}
-                    </span>
-                  </div>
-
-                  <div className="rounded-lg bg-[#03140C]/90 border border-[#0A3D26]/70 p-3">
-                    <span className="block font-mono text-[9px] uppercase tracking-wider text-emerald-300/60">
-                      IMPLEMENTASI
-                    </span>
-                    <span className="block font-mono text-xs sm:text-sm font-bold text-white mt-0.5 truncate">
-                      {activeNode.specImplementation}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Pipeline Connection Hook */}
-                <div className="flex items-center gap-2 rounded-lg bg-[#0A3D26]/40 border border-[#A3E635]/20 px-3.5 py-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#A3E635] shrink-0" />
-                  <span className="font-mono text-[10px] sm:text-xs text-emerald-200">
-                    <strong className="text-[#A3E635]">Jalur Data:</strong> {activeNode.pipelineConnection}
+                  <NodeIcon className="w-4 h-4 shrink-0" />
+                  <span>{node.name}</span>
+                  <span className="text-[10px] font-bold text-[#0F5132] bg-[#E8F5EE] px-2 py-0.5 rounded-full">
+                    {node.badge}
                   </span>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Hardware Strip: Verified Production Pipeline */}
-        <div className="border-t border-[#0A3D26]/60 bg-[#020F09] px-4 py-2.5 sm:px-6 sm:py-3 flex flex-wrap items-center justify-between gap-2 text-[10px] sm:text-xs font-mono text-emerald-300/70 select-none">
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-[#15803D]" />
-            <span className="font-bold text-white">E-Rekap Production Engine</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-[#A3E635]">Next.js 16</span>
-            <span>→</span>
-            <span className="text-[#A3E635]">React 19 SSR</span>
-            <span>→</span>
-            <span className="text-[#A3E635]">SQLite WAL</span>
-            <span>→</span>
-            <span className="text-[#A3E635]">A4 XLSX & Video</span>
+              );
+            })}
           </div>
         </div>
       </div>
