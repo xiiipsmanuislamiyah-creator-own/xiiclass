@@ -16,6 +16,8 @@ import { SplashScreen } from "@/components/SplashScreen";
 import { AmbientBackdrop } from "@/components/AmbientBackdrop";
 import { useCurtainNavigation } from "@/components/TransitionProvider";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
+import { AnimatedSparkline } from "@/components/AnimatedSparkline";
+import { ScrollRevealCard } from "@/components/ScrollRevealCard";
 import { withBasePath } from "@/lib/paths";
 
 interface LiveSummary {
@@ -68,8 +70,6 @@ function TypewriterHeading() {
 
 export default function LandingPage() {
   const { navigateWithCurtain } = useCurtainNavigation();
-  const [featuresInView, setFeaturesInView] = useState(false);
-  const featuresRef = useRef<HTMLElement>(null);
   const [stats, setStats] = useState<LiveSummary>({
     attendanceRate: 94.7,
     totalStudents: 18,
@@ -77,22 +77,6 @@ export default function LandingPage() {
     academicYear: "2026/2027",
     semester: "Ganjil",
   });
-
-  useEffect(() => {
-    const el = featuresRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setFeaturesInView(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
 
   useEffect(() => {
     fetch(withBasePath("/api/overview"))
@@ -212,41 +196,108 @@ export default function LandingPage() {
 
             {/* 3D Depth Floating Live Snapshot Strip */}
             <div className="animate-card-3d pt-4" style={{ animationDelay: "380ms" }}>
-              <div className="mx-auto max-w-2xl sheet-overlap rounded-3xl p-4 sm:p-5 grid grid-cols-3 gap-3 text-left">
-                <div className="rounded-2xl bg-[var(--bg)] p-3 sm:p-4">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
-                    Kehadiran
-                  </p>
-                  <p className="mt-1 font-num text-2xl sm:text-3xl font-extrabold text-[var(--canopy)]">
-                    <AnimatedCounter value={stats.attendanceRate} decimals={1} suffix="%" />
-                  </p>
+              <div className="mx-auto max-w-2xl sheet-overlap rounded-3xl p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
+                {/* 1. Kehadiran Card + Live Animated SVG Trendline */}
+                <div className="rounded-2xl bg-[var(--bg)] p-3.5 sm:p-4 flex flex-col justify-between gap-2.5">
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
+                        Kehadiran
+                      </p>
+                      <span className="font-num text-[10px] font-bold text-[#15803D] bg-emerald-100/70 rounded-full px-2 py-0.5">
+                        Real-time
+                      </span>
+                    </div>
+                    <p className="mt-1 font-num text-2xl sm:text-3xl font-extrabold text-[var(--canopy)]">
+                      <AnimatedCounter value={stats.attendanceRate} decimals={1} suffix="%" />
+                    </p>
+                  </div>
+                  {/* Animated SVG Trend Line */}
+                  <div className="pt-1 border-t border-[var(--border)]">
+                    <div className="flex items-center justify-between text-[10px] font-semibold text-[var(--ink-muted)] mb-1">
+                      <span>Tren Kehadiran</span>
+                      <span className="font-num font-extrabold text-[#15803D]">Aktif</span>
+                    </div>
+                    <AnimatedSparkline
+                      data={[88.5, 91.0, 89.2, 93.4, 92.8, stats.attendanceRate]}
+                      width={140}
+                      height={32}
+                      strokeColor="#0F5132"
+                      fillColor="rgba(15, 81, 50, 0.14)"
+                      strokeWidth={2.4}
+                      showPulse={true}
+                    />
+                  </div>
                 </div>
 
-                <div className="rounded-2xl bg-[var(--bg)] p-3 sm:p-4">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
-                    Total Siswa
-                  </p>
-                  <p className="mt-1 font-num text-2xl sm:text-3xl font-extrabold text-[var(--ink)]">
-                    <AnimatedCounter value={stats.totalStudents} />
-                  </p>
+                {/* 2. Total Siswa Card + Rombel Capacity Curve */}
+                <div className="rounded-2xl bg-[var(--bg)] p-3.5 sm:p-4 flex flex-col justify-between gap-2.5">
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
+                        Total Siswa
+                      </p>
+                      <span className="font-num text-[10px] font-bold text-slate-700 bg-slate-200/70 rounded-full px-2 py-0.5">
+                        Terdaftar
+                      </span>
+                    </div>
+                    <p className="mt-1 font-num text-2xl sm:text-3xl font-extrabold text-[var(--ink)]">
+                      <AnimatedCounter value={stats.totalStudents} />
+                    </p>
+                  </div>
+                  {/* Micro Capacity Sparkline */}
+                  <div className="pt-1 border-t border-[var(--border)]">
+                    <div className="flex items-center justify-between text-[10px] font-semibold text-[var(--ink-muted)] mb-1">
+                      <span>Kapasitas Rombel</span>
+                      <span className="font-num font-extrabold text-[var(--ink)]">100%</span>
+                    </div>
+                    <AnimatedSparkline
+                      data={[6, 6, 6, 6, 6, 6]}
+                      width={140}
+                      height={32}
+                      strokeColor="#334155"
+                      fillColor="rgba(51, 65, 85, 0.10)"
+                      strokeWidth={2}
+                      showPulse={false}
+                    />
+                  </div>
                 </div>
 
-                <div className="rounded-2xl bg-[var(--bg)] p-3 sm:p-4">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
-                    Multi-Kelas
-                  </p>
-                  <p className="mt-1 font-num text-2xl sm:text-3xl font-extrabold text-[var(--ink)]">
-                    <AnimatedCounter value={stats.totalClasses} />
-                  </p>
+                {/* 3. Multi-Kelas Card + Distribution Bars */}
+                <div className="rounded-2xl bg-[var(--bg)] p-3.5 sm:p-4 flex flex-col justify-between gap-2.5">
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
+                        Multi-Kelas
+                      </p>
+                      <span className="font-num text-[10px] font-bold text-[#A3E635] bg-[#0A3D26] rounded-full px-2 py-0.5">
+                        Tingkat MA
+                      </span>
+                    </div>
+                    <p className="mt-1 font-num text-2xl sm:text-3xl font-extrabold text-[var(--ink)]">
+                      <AnimatedCounter value={stats.totalClasses} />
+                    </p>
+                  </div>
+                  {/* Rombel Distribution Progress */}
+                  <div className="pt-1 border-t border-[var(--border)] space-y-1.5">
+                    <div className="flex items-center justify-between text-[10px] font-semibold text-[var(--ink-muted)]">
+                      <span>X, XI, XII</span>
+                      <span className="font-num font-extrabold text-[var(--canopy)]">3 Rombel</span>
+                    </div>
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--border)] flex">
+                      <div style={{ width: "33.3%" }} className="h-full bg-[#0A3D26]" title="X IPA 1" />
+                      <div style={{ width: "33.3%" }} className="h-full bg-[#15803D]" title="XI IPA 1" />
+                      <div style={{ width: "33.4%" }} className="h-full bg-[#A3E635]" title="XII IPS 1" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* 4-Column 3D Perspective Capability Strip */}
+        {/* 4-Column 3D Perspective Capability Strip (Scroll-Triggered Stagger) */}
         <section
-          ref={featuresRef}
           id="fitur"
           className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-10"
         >
@@ -256,39 +307,31 @@ export default function LandingPage() {
                 title: "Multi-Kelas Terpadu",
                 desc: "Ringkasan kehadiran per kelas dengan persentase dan bar komposisi otomatis.",
                 icon: UsersThree,
-                delay: "60ms",
               },
               {
                 title: "Review & Admin",
                 desc: "Siswa dan guru bebas memantau rekap; edit data terkunci aman untuk Admin.",
                 icon: ShieldCheck,
-                delay: "140ms",
               },
               {
                 title: "Cetak A4 Formal",
                 desc: "Layout A4 Landscape siap cetak lengkap dengan Kop Surat resmi lembaga.",
                 icon: Printer,
-                delay: "220ms",
               },
               {
                 title: "Backup & Ekspor XLSX",
                 desc: "Ekspor laporan dan impor ulang backup spreadsheet .xlsx langsung dari Admin.",
                 icon: FileXls,
-                delay: "300ms",
               },
-            ].map((item) => {
+            ].map((item, idx) => {
               const Icon = item.icon;
               return (
-                <div
+                <ScrollRevealCard
                   key={item.title}
-                  style={{
-                    animationDelay: item.delay,
-                    opacity: featuresInView ? undefined : 0,
-                    transform: featuresInView ? undefined : "translateY(24px)",
-                  }}
-                  className={`${
-                    featuresInView ? "animate-card-3d" : "opacity-0"
-                  } card-pro rounded-3xl p-5 space-y-3 cursor-default transition-all duration-300 active:scale-[0.98] hover:shadow-lg`}
+                  delayMs={idx * 130}
+                  direction="up"
+                  threshold={0.15}
+                  className="card-pro rounded-3xl p-5 space-y-3 cursor-default transition-transform duration-200 active:scale-[0.98] hover:shadow-lg"
                 >
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--surface-mint)] text-[var(--canopy)]">
                     <Icon size={22} weight="fill" />
@@ -297,17 +340,19 @@ export default function LandingPage() {
                   <p className="text-xs sm:text-sm text-[var(--ink-muted)] leading-relaxed">
                     {item.desc}
                   </p>
-                </div>
+                </ScrollRevealCard>
               );
             })}
           </div>
         </section>
 
-        {/* Deep Forest Showcase Banner */}
+        {/* Deep Forest Showcase Banner (Scroll-Triggered Smooth Scale) */}
         <section className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 pb-12">
-          <div
-            className="animate-card-3d relative overflow-hidden rounded-3xl bg-[#0A3D26] p-6 sm:p-9 text-white shadow-[0_20px_45px_-14px_rgba(7,41,25,0.45)]"
-            style={{ animationDelay: "780ms" }}
+          <ScrollRevealCard
+            delayMs={100}
+            direction="scale"
+            threshold={0.2}
+            className="relative overflow-hidden rounded-3xl bg-[#0A3D26] p-6 sm:p-9 text-white shadow-[0_20px_45px_-14px_rgba(7,41,25,0.45)]"
           >
             <AmbientBackdrop variant="canopy" />
             <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
@@ -342,7 +387,7 @@ export default function LandingPage() {
                 </Link>
               </div>
             </div>
-          </div>
+          </ScrollRevealCard>
         </section>
 
         {/* Footer */}

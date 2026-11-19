@@ -17,6 +17,7 @@ import {
 } from "@phosphor-icons/react";
 import { AppShell } from "@/components/AppShell";
 import { AmbientBackdrop } from "@/components/AmbientBackdrop";
+import { AnimatedSparkline } from "@/components/AnimatedSparkline";
 import { withBasePath } from "@/lib/paths";
 
 interface SchoolData {
@@ -108,28 +109,17 @@ export default function InfoPage() {
                     Next.js + SQLite WAL
                   </p>
                 </div>
-                <svg
-                  width="76"
-                  height="28"
-                  viewBox="0 0 76 28"
-                  fill="none"
-                  aria-hidden="true"
-                  className="text-[#A3E635]"
-                >
-                  <path
-                    d="M2 22 L14 17 L24 19 L36 10 L48 13 L60 5 L74 7"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                <div className="w-24">
+                  <AnimatedSparkline
+                    data={[82, 87, 85, 91, 89, 95, 94.7]}
+                    width={88}
+                    height={28}
+                    strokeColor="#A3E635"
+                    fillColor="rgba(163, 230, 53, 0.22)"
+                    strokeWidth={2.2}
+                    showPulse={true}
                   />
-                  <path
-                    d="M2 22 L14 17 L24 19 L36 10 L48 13 L60 5 L74 7 L74 26 L2 26 Z"
-                    fill="currentColor"
-                    fillOpacity="0.14"
-                  />
-                  <circle cx="74" cy="7" r="2.5" fill="currentColor" />
-                </svg>
+                </div>
               </div>
               <div className="flex items-center gap-1.5 text-[10px] font-semibold text-emerald-100/80">
                 <span className="rounded-md bg-white/[0.08] px-2 py-0.5">Review Publik</span>

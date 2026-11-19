@@ -20,6 +20,7 @@ import { AppShell } from "@/components/AppShell";
 import { AmbientBackdrop } from "@/components/AmbientBackdrop";
 import { PeriodPicker } from "@/components/CustomPickers";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
+import { AnimatedSparkline } from "@/components/AnimatedSparkline";
 import { withBasePath } from "@/lib/paths";
 
 interface OverviewData {
@@ -61,7 +62,16 @@ function AttendanceRing({ rate }: { rate: number }) {
   const radius = 34;
   const circumference = 2 * Math.PI * radius;
   const clamped = Math.max(0, Math.min(100, rate));
-  const offset = circumference - (clamped / 100) * circumference;
+  const targetOffset = circumference - (clamped / 100) * circumference;
+  const [offset, setOffset] = useState<number>(circumference);
+
+  useEffect(() => {
+    // Start at empty circle, then smoothly transition to target offset
+    const timer = setTimeout(() => {
+      setOffset(targetOffset);
+    }, 60);
+    return () => clearTimeout(timer);
+  }, [targetOffset]);
 
   return (
     <div className="relative flex h-24 w-24 items-center justify-center shrink-0">
@@ -84,7 +94,10 @@ function AttendanceRing({ rate }: { rate: number }) {
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
-          style={{ transition: "stroke-dashoffset 900ms cubic-bezier(0.16, 1, 0.3, 1)" }}
+          style={{
+            transition: "stroke-dashoffset 1100ms cubic-bezier(0.16, 1, 0.3, 1)",
+            willChange: "stroke-dashoffset",
+          }}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
@@ -95,6 +108,113 @@ function AttendanceRing({ rate }: { rate: number }) {
           Hadir
         </span>
       </div>
+    </div>
+  );
+}
+
+function AnimatedDonutChart({
+  segments,
+  totalSessions,
+  r = 64,
+}: {
+  segments: { label: string; val: number; color: string; dot: string }[];
+  totalSessions: number;
+  r?: number;
+}) {
+  const circ = 2 * Math.PI * r;
+  const [isRendered, setIsRendered] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsRendered(true), 60);
+    return () => clearTimeout(timer);
+  }, [totalSessions]);
+
+  let accOffset = 0;
+
+  return (
+    <div className="relative h-44 w-44 shrink-0 flex items-center justify-center">
+      <svg viewBox="0 0 160 160" className="h-44 w-44 -rotate-90">
+        <circle cx="80" cy="80" r={r} fill="none" stroke="var(--bg)" strokeWidth="20" />
+        {totalSessions > 0 &&
+          segments.map((seg) => {
+            if (seg.val <= 0) return null;
+            const len = (seg.val / totalSessions) * circ;
+            const targetDashArray = `${len} ${circ - len}`;
+            const targetDashOffset = -accOffset;
+            accOffset += len;
+
+            return (
+              <circle
+                key={seg.label}
+                cx="80"
+                cy="80"
+                r={r}
+                fill="none"
+                stroke={seg.color}
+                strokeWidth="20"
+                strokeDasharray={isRendered ? targetDashArray : `0 ${circ}`}
+                strokeDashoffset={isRendered ? targetDashOffset : 0}
+                style={{
+                  transition: "stroke-dasharray 950ms cubic-bezier(0.16, 1, 0.3, 1), stroke-dashoffset 950ms cubic-bezier(0.16, 1, 0.3, 1)",
+                  willChange: "stroke-dasharray, stroke-dashoffset",
+                }}
+              />
+            );
+          })}
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+        <span className="font-num text-2xl font-extrabold text-[var(--ink)]">
+          <AnimatedCounter value={totalSessions} />
+        </span>
+        <span className="text-[11px] font-bold text-[var(--ink-muted)]">Total Sesi</span>
+      </div>
+    </div>
+  );
+}
+
+function AnimatedClassBars({
+  hadir,
+  sakit,
+  izin,
+  alpha,
+  total,
+}: {
+  hadir: number;
+  sakit: number;
+  izin: number;
+  alpha: number;
+  total: number;
+}) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setMounted(true), 80);
+    return () => clearTimeout(timer);
+  }, [total]);
+
+  const w = (val: number) => (total > 0 && mounted ? `${(val / total) * 100}%` : "0%");
+
+  return (
+    <div className="h-3.5 w-full overflow-hidden rounded-full bg-white flex">
+      <div
+        style={{ width: w(hadir), transition: "width 850ms cubic-bezier(0.16, 1, 0.3, 1)" }}
+        className="h-full bg-[#15803D]"
+        title={`Hadir: ${hadir}`}
+      />
+      <div
+        style={{ width: w(sakit), transition: "width 850ms cubic-bezier(0.16, 1, 0.3, 1)" }}
+        className="h-full bg-amber-500"
+        title={`Sakit: ${sakit}`}
+      />
+      <div
+        style={{ width: w(izin), transition: "width 850ms cubic-bezier(0.16, 1, 0.3, 1)" }}
+        className="h-full bg-sky-600"
+        title={`Izin: ${izin}`}
+      />
+      <div
+        style={{ width: w(alpha), transition: "width 850ms cubic-bezier(0.16, 1, 0.3, 1)" }}
+        className="h-full bg-rose-600"
+        title={`Alpha: ${alpha}`}
+      />
     </div>
   );
 }
@@ -199,6 +319,24 @@ export default function DashboardPage() {
                   </h1>
                   <span className="rounded-full bg-white/15 px-2.5 py-0.5 font-num text-xs font-bold text-emerald-100">
                     {loading ? "..." : <AnimatedCounter value={data?.summary.total_students ?? 0} suffix=" Siswa" />}
+                  </span>
+                </div>
+
+                {/* Animated Line Graph (Sparkline) Synchronous with Counter */}
+                <div className="flex items-center gap-2.5 pt-0.5">
+                  <div className="w-28 sm:w-36">
+                    <AnimatedSparkline
+                      data={[89, 91.5, 90.2, 93.8, 92.5, data?.summary.attendance_rate ?? 94.7]}
+                      width={120}
+                      height={28}
+                      strokeColor="#A3E635"
+                      fillColor="rgba(163, 230, 53, 0.22)"
+                      strokeWidth={2.4}
+                      showPulse={true}
+                    />
+                  </div>
+                  <span className="text-[10px] font-num font-bold uppercase tracking-wider text-lime-200/80">
+                    Grafik Tren Aktif
                   </span>
                 </div>
 
@@ -408,48 +546,7 @@ export default function DashboardPage() {
 
                   return (
                     <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row items-center gap-6">
-                      <div className="relative h-44 w-44 shrink-0 flex items-center justify-center">
-                        <svg viewBox="0 0 160 160" className="h-44 w-44 -rotate-90">
-                          <circle
-                            cx="80"
-                            cy="80"
-                            r={r}
-                            fill="none"
-                            stroke="var(--bg)"
-                            strokeWidth="20"
-                          />
-                          {totalSessions > 0 &&
-                            segments.map((seg) => {
-                              if (seg.val <= 0) return null;
-                              const len = (seg.val / totalSessions) * circ;
-                              const dashArray = `${len} ${circ - len}`;
-                              const dashOffset = -accOffset;
-                              accOffset += len;
-                              return (
-                                <circle
-                                  key={seg.label}
-                                  cx="80"
-                                  cy="80"
-                                  r={r}
-                                  fill="none"
-                                  stroke={seg.color}
-                                  strokeWidth="20"
-                                  strokeDasharray={dashArray}
-                                  strokeDashoffset={dashOffset}
-                                  className="transition-all duration-700 ease-out"
-                                />
-                              );
-                            })}
-                        </svg>
-                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                          <span className="font-num text-2xl font-extrabold text-[var(--ink)]">
-                            <AnimatedCounter value={totalSessions} />
-                          </span>
-                          <span className="text-[11px] font-bold text-[var(--ink-muted)]">
-                            Total Sesi
-                          </span>
-                        </div>
-                      </div>
+                      <AnimatedDonutChart segments={segments} totalSessions={totalSessions} r={64} />
 
                       <div className="w-full grid grid-cols-2 sm:grid-cols-1 gap-2.5">
                         {segments.map((seg) => (
@@ -515,12 +612,13 @@ export default function DashboardPage() {
                             </span>
                           </div>
 
-                          <div className="h-3.5 w-full overflow-hidden rounded-full bg-white flex">
-                            <div style={{ width: w(row.hadir) }} className="h-full bg-[#15803D]" title={`Hadir: ${row.hadir}`} />
-                            <div style={{ width: w(row.sakit) }} className="h-full bg-amber-500" title={`Sakit: ${row.sakit}`} />
-                            <div style={{ width: w(row.izin) }} className="h-full bg-sky-600" title={`Izin: ${row.izin}`} />
-                            <div style={{ width: w(row.alpha) }} className="h-full bg-rose-600" title={`Alpha: ${row.alpha}`} />
-                          </div>
+                          <AnimatedClassBars
+                            hadir={row.hadir}
+                            sakit={row.sakit}
+                            izin={row.izin}
+                            alpha={row.alpha}
+                            total={total}
+                          />
 
                           <div className="flex flex-wrap items-center gap-3 text-[11px] font-num font-bold text-[var(--ink-muted)]">
                             <span className="text-[#15803D]">H: {row.hadir}</span>
@@ -598,7 +696,11 @@ export default function DashboardPage() {
                   </div>
                   <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--bg)]">
                     <div
-                      style={{ width: `${Math.min(100, share)}%` }}
+                      style={{
+                        width: `${Math.min(100, share)}%`,
+                        transition: "width 950ms cubic-bezier(0.16, 1, 0.3, 1)",
+                        willChange: "width",
+                      }}
                       className={`h-full rounded-full ${item.bar}`}
                     />
                   </div>

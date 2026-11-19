@@ -38,6 +38,10 @@
   --font-mono: var(--font-mono-base);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   background-color: var(--bg);
