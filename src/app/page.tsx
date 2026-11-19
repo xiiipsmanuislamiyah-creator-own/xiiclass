@@ -29,7 +29,7 @@ interface LiveSummary {
   semester: string;
 }
 
-const TYPED_PHRASES = ["Lebih Presisi.", "Lebih Transparan.", "Siap Cetak A4."];
+const TYPED_PHRASES = ["Lebih Presisi.", "Lebih Transparan.", "Siap Cetak A4.", "Otomatis & Real-time."];
 
 function TypewriterHeading() {
   const [phraseIdx, setPhraseIdx] = useState(0);
@@ -300,23 +300,23 @@ export default function LandingPage() {
         {/* Interactive In-View Kinetic Showcase Teaser (Autoplay on Scroll) */}
         <section className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-6">
           <div className="text-center max-w-2xl mx-auto mb-6 space-y-2">
-            <div className="inline-flex items-center gap-2 rounded-full bg-[#EAF6EE] px-3.5 py-1 text-xs font-extrabold text-[#0A3D26] border border-[#0A3D26]/12 shadow-sm">
+            <div className="inline-flex items-center gap-2 rounded-full bg-[#EAF6EE] px-3.5 py-1 text-xs font-extrabold text-[#0A3D26] border border-[#0A3D26]/14 shadow-xs">
               <span className="h-2 w-2 rounded-full bg-[#10B981] animate-pulse" />
-              <span>KINETIC TYPOGRAPHY · AUTOPLAY ON SCROLL</span>
+              <span>MASTER SHOWREEL 68S · 10 SCENE KINETIK</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--ink)]">
               Antarmuka Responsif, Alur Kerja Nyata
             </h2>
             <p className="text-xs sm:text-sm text-[var(--ink-muted)]">
-              Saksikan ringkasan otomatis, interaksi tabel spreadsheet Excel layar penuh, hingga kesiapan cetak A4 formal.
+              Saksikan 10 alur kinetik: simulasi multi-device responsif, time-remapping roll counter, inspeksi Mode Excel layar penuh, hingga stempel pengesahan formal ber-Kop Madrasah.
             </p>
           </div>
 
           <AutoplayOnScrollVideo
-            videoSrc="/erekap-horizontal-upgraded.mp4"
-            posterSrc="/erekap-horizontal-poster.jpg"
+            videoSrc="/erekap-showreel-web.mp4"
+            posterSrc="/erekap-showreel-poster.jpg"
             urlLabel="rhmt.biz.id/xiiclass"
-            badgeLabel="SHOWCASE RESMI 60S · MOTION GRAPHICS"
+            badgeLabel="SHOWREEL 68S · 10 SCENE KINETIK"
           />
         </section>
 
@@ -352,13 +352,13 @@ export default function LandingPage() {
               return (
                 <ScrollRevealCard
                   key={item.title}
-                  delayMs={idx * 130}
+                  delayMs={idx * 120}
                   direction="up"
                   threshold={0.15}
-                  className="card-pro rounded-3xl p-5 space-y-3 cursor-default transition-transform duration-200 active:scale-[0.98] hover:shadow-lg"
+                  className="card-pro rounded-3xl p-6 space-y-3 cursor-default transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-[#0A3D26]/25 active:scale-[0.98] group"
                 >
-                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--surface-mint)] text-[var(--canopy)]">
-                    <Icon size={22} weight="fill" />
+                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--surface-mint)] text-[var(--canopy)] transition-transform duration-300 group-hover:scale-110 shadow-xs">
+                    <Icon size={24} weight="fill" />
                   </span>
                   <h2 className="text-base font-extrabold text-[var(--ink)]">{item.title}</h2>
                   <p className="text-xs sm:text-sm text-[var(--ink-muted)] leading-relaxed">
