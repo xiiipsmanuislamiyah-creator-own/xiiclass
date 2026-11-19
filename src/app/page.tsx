@@ -313,10 +313,10 @@ export default function LandingPage() {
           </div>
 
           <AutoplayOnScrollVideo
-            videoSrc="/erekap-badar-style.mp4"
-            posterSrc="/erekap-badar-poster.jpg"
+            videoSrc="/erekap-horizontal-upgraded.mp4"
+            posterSrc="/erekap-horizontal-poster.jpg"
             urlLabel="rhmt.biz.id/xiiclass"
-            badgeLabel="KINETIC TYPOGRAPHY · 60 FPS"
+            badgeLabel="SHOWCASE RESMI 60S · MOTION GRAPHICS"
           />
         </section>
 
