@@ -302,7 +302,7 @@ export default function LandingPage() {
           <div className="text-center max-w-2xl mx-auto mb-6 space-y-2">
             <div className="inline-flex items-center gap-2 rounded-full bg-[#EAF6EE] px-3.5 py-1 text-xs font-extrabold text-[#0A3D26] border border-[#0A3D26]/12 shadow-sm">
               <span className="h-2 w-2 rounded-full bg-[#10B981] animate-pulse" />
-              <span>SHOWCASE REAL-TIME · AUTOPLAY ON SCROLL</span>
+              <span>KINETIC TYPOGRAPHY · AUTOPLAY ON SCROLL</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--ink)]">
               Antarmuka Responsif, Alur Kerja Nyata
@@ -313,10 +313,10 @@ export default function LandingPage() {
           </div>
 
           <AutoplayOnScrollVideo
-            videoSrc="/erekap-kinetic-teaser.mp4"
-            posterSrc="/erekap-kinetic-poster.jpg"
+            videoSrc="/erekap-badar-style.mp4"
+            posterSrc="/erekap-badar-poster.jpg"
             urlLabel="rhmt.biz.id/xiiclass"
-            badgeLabel="AUTOPLAY ON VIEWPORT · LIGHT MODE"
+            badgeLabel="KINETIC TYPOGRAPHY · 60 FPS"
           />
         </section>
 
