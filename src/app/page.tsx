@@ -16,6 +16,7 @@ import { SplashScreen } from "@/components/SplashScreen";
 import { AmbientBackdrop } from "@/components/AmbientBackdrop";
 import { useCurtainNavigation } from "@/components/TransitionProvider";
 import { ScrollRevealCard } from "@/components/ScrollRevealCard";
+import { TechnicalCornerMarks } from "@/components/TechnicalCornerMarks";
 import { AutoplayOnScrollVideo } from "@/components/AutoplayOnScrollVideo";
 import { TechStackMotion } from "@/components/TechStackMotion";
 import { withBasePath } from "@/lib/paths";
@@ -206,8 +207,9 @@ export default function LandingPage() {
               delayMs={100}
               direction="up"
               threshold={0.15}
-              className="lg:col-span-7 card-pro rounded-3xl p-6 sm:p-7 flex flex-col justify-between cursor-default transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#0A3D26]/25 group"
+              className="lg:col-span-7 card-pro rounded-3xl p-6 sm:p-7 flex flex-col justify-between cursor-default transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#0A3D26]/25 group relative"
             >
+              <TechnicalCornerMarks />
               <div>
                 <div className="flex items-center gap-3">
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--surface-mint)] text-[var(--canopy)] shadow-2xs group-hover:scale-105 transition-transform">
@@ -280,8 +282,9 @@ export default function LandingPage() {
               delayMs={200}
               direction="up"
               threshold={0.15}
-              className="lg:col-span-5 card-pro rounded-3xl p-6 sm:p-7 flex flex-col justify-between cursor-default transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#0A3D26]/25 group"
+              className="lg:col-span-5 card-pro rounded-3xl p-6 sm:p-7 flex flex-col justify-between cursor-default transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#0A3D26]/25 group relative"
             >
+              <TechnicalCornerMarks />
               <div>
                 <div className="flex items-center gap-3">
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--surface-mint)] text-[var(--canopy)] shadow-2xs group-hover:scale-105 transition-transform">
@@ -345,8 +348,9 @@ export default function LandingPage() {
               delayMs={300}
               direction="up"
               threshold={0.15}
-              className="lg:col-span-5 card-pro rounded-3xl p-6 sm:p-7 flex flex-col justify-between cursor-default transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#0A3D26]/25 group"
+              className="lg:col-span-5 card-pro rounded-3xl p-6 sm:p-7 flex flex-col justify-between cursor-default transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#0A3D26]/25 group relative"
             >
+              <TechnicalCornerMarks />
               <div>
                 <div className="flex items-center gap-3">
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--surface-mint)] text-[var(--canopy)] shadow-2xs group-hover:scale-105 transition-transform">
@@ -389,8 +393,9 @@ export default function LandingPage() {
               delayMs={400}
               direction="up"
               threshold={0.15}
-              className="lg:col-span-7 card-pro rounded-3xl p-6 sm:p-7 flex flex-col justify-between cursor-default transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#0A3D26]/25 group"
+              className="lg:col-span-7 card-pro rounded-3xl p-6 sm:p-7 flex flex-col justify-between cursor-default transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#0A3D26]/25 group relative"
             >
+              <TechnicalCornerMarks />
               <div>
                 <div className="flex items-center gap-3">
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--surface-mint)] text-[var(--canopy)] shadow-2xs group-hover:scale-105 transition-transform">
@@ -449,8 +454,9 @@ export default function LandingPage() {
             delayMs={100}
             direction="scale"
             threshold={0.2}
-            className="relative overflow-hidden rounded-3xl bg-[#0A3D26] p-6 sm:p-10 text-white shadow-[0_20px_45px_-14px_rgba(7,41,25,0.45)]"
+            className="relative overflow-hidden rounded-3xl bg-[#0A3D26] p-6 sm:p-10 text-white shadow-[0_20px_45px_-14px_rgba(7,41,25,0.45)] group"
           >
+            <TechnicalCornerMarks variant="dark" />
             <AmbientBackdrop variant="canopy" />
             <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
               <div className="space-y-4 max-w-xl">
