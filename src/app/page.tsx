@@ -165,8 +165,8 @@ export default function LandingPage() {
         </section>
 
         {/* Product Showcase Video (Clean High-Craft Frame, No AI Slop Badges) */}
-        <section className="relative z-10 mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8 pt-4 pb-16">
-          <div className="text-center max-w-2xl mx-auto mb-6 space-y-2">
+        <section className="relative z-10 mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 pb-12 sm:pb-16">
+          <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8 space-y-2">
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--ink)]">
               Antarmuka Responsif, Alur Kerja Nyata
             </h2>
@@ -183,7 +183,7 @@ export default function LandingPage() {
           />
         </section>
 
-        {/* Dynamic Orbiting & Kinetic Stream Tech Stack (Zero Card Patterns) */}
+        {/* Precision Technical Architecture Matrix (100% Official SVG Icons & Anti-Collision Grid) */}
         <TechStackMotion />
 
         {/* 4-Column 3D Perspective Capability Strip (Scroll-Triggered Stagger) */}
