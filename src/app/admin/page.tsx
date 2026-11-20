@@ -31,10 +31,10 @@ interface RekapEntry {
   gender: "L" | "P";
   class_id: number;
   class_name: string;
-  hadir: number;
-  sakit: number;
-  izin: number;
-  alpha: number;
+  hadir: number | string;
+  sakit: number | string;
+  izin: number | string;
+  alpha: number | string;
   note: string;
 }
 
@@ -224,7 +224,9 @@ export default function AdminPage() {
       prev.map((item) => {
         if (item.student_id !== studentId) return item;
         if (field === "note") return { ...item, note: String(value) };
-        return { ...item, [field]: Math.max(0, Number(value) || 0) };
+        if (value === "") return { ...item, [field]: "" };
+        const parsed = parseInt(String(value), 10);
+        return { ...item, [field]: isNaN(parsed) ? "" : Math.max(0, parsed) };
       })
     );
   };
@@ -239,10 +241,10 @@ export default function AdminPage() {
           period,
           entries: entries.map((e) => ({
             student_id: e.student_id,
-            hadir: e.hadir,
-            sakit: e.sakit,
-            izin: e.izin,
-            alpha: e.alpha,
+            hadir: Number(e.hadir) || 0,
+            sakit: Number(e.sakit) || 0,
+            izin: Number(e.izin) || 0,
+            alpha: Number(e.alpha) || 0,
             note: e.note,
           })),
         }),
@@ -754,9 +756,15 @@ export default function AdminPage() {
                                   inputMode="numeric"
                                   min={0}
                                   value={entry[field]}
+                                  onFocus={(e) => e.target.select()}
                                   onChange={(e) =>
                                     updateEntryField(entry.student_id, field, e.target.value)
                                   }
+                                  onBlur={() => {
+                                    if (entry[field] === "") {
+                                      updateEntryField(entry.student_id, field, 0);
+                                    }
+                                  }}
                                   aria-label={`${field} ${entry.name}`}
                                   className="font-num w-16 min-h-[40px] rounded-xl bg-[var(--bg)] px-2 py-1.5 text-center text-base sm:text-sm font-extrabold text-[var(--ink)]"
                                 />
