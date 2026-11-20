@@ -278,8 +278,7 @@ export default function AdminPage() {
       }>;
 
       const sheetRows = rows.map((r, idx) => ({
-        No: idx + 1,
-        "No. Absen": r.nis,
+        "No. Absen": r.nis || idx + 1,
         "Nama Siswa": r.name,
         Kelas: r.class_name,
         "L/P": r.gender,
@@ -728,8 +727,7 @@ export default function AdminPage() {
                     <table className="w-full text-left border-collapse min-w-[680px]">
                       <thead>
                         <tr className="bg-[var(--surface-raised)] border-b border-[var(--border-strong)] text-xs font-bold uppercase tracking-wider text-[var(--ink-muted)]">
-                          <th className="py-3.5 px-4 text-right w-12">No</th>
-                          <th className="py-3.5 px-3">No. Absen</th>
+                          <th className="py-3.5 px-3.5 text-center w-16">No. Absen</th>
                           <th className="py-3.5 px-3">
                             Nama Siswa
                           </th>
@@ -743,11 +741,8 @@ export default function AdminPage() {
                       <tbody className="divide-y divide-[var(--border)] text-sm">
                         {entries.map((entry, idx) => (
                           <tr key={entry.student_id} className="hover:bg-[var(--surface-raised)] group">
-                            <td className="py-3 px-4 text-right font-num text-[var(--ink-muted)]">
-                              {idx + 1}
-                            </td>
-                            <td className="py-3 px-3 font-num text-xs font-semibold text-[var(--ink-muted)] whitespace-nowrap">
-                              {entry.nis}
+                            <td className="py-3 px-3.5 text-center font-num text-xs font-semibold text-[var(--ink-muted)] whitespace-nowrap">
+                              {entry.nis || String(idx + 1).padStart(2, "0")}
                             </td>
                             <td className="py-3 px-3 font-bold text-[var(--ink)] whitespace-nowrap">
                               {entry.name}

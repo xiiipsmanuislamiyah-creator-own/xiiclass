@@ -131,8 +131,7 @@ function RekapContent() {
 
   const handleExportExcel = () => {
     const exportData = sortedRows.map((r, idx) => ({
-      No: idx + 1,
-      "No. Absen": r.nis,
+      "No. Absen": r.nis || idx + 1,
       "Nama Siswa": r.name,
       Kelas: r.class_name,
       "L/P": r.gender,
@@ -324,8 +323,7 @@ function RekapContent() {
                 <table className="print-table w-full text-left border-collapse min-w-[740px]">
                   <thead>
                     <tr className="bg-[var(--surface-raised)] border-b border-[var(--border-strong)] text-xs font-bold uppercase tracking-wider text-[var(--ink-muted)]">
-                      <th className="py-3.5 px-3.5 text-right w-12">No</th>
-                      <th className="py-3.5 px-3.5">No. Absen</th>
+                      <th className="py-3.5 px-3.5 text-center w-16">No. Absen</th>
                       <th
                         className="py-3.5 px-3.5 sticky left-0 bg-[var(--surface-raised)] z-10"
                         aria-sort={
@@ -379,11 +377,8 @@ function RekapContent() {
                         key={row.student_id}
                         className="hover:bg-[var(--surface-raised)] transition-colors group"
                       >
-                        <td className="py-3 px-3.5 text-right font-num text-[var(--ink-muted)]">
-                          {index + 1}
-                        </td>
-                        <td className="py-3 px-3.5 font-num text-xs font-semibold text-[var(--ink-muted)] whitespace-nowrap">
-                          {row.nis}
+                        <td className="py-3 px-3.5 text-center font-num text-xs font-semibold text-[var(--ink-muted)] whitespace-nowrap">
+                          {row.nis || String(index + 1).padStart(2, "0")}
                         </td>
                         <td className="py-3 px-3.5 font-bold text-[var(--ink)] whitespace-nowrap sticky left-0 bg-[var(--surface)] group-hover:bg-[var(--surface-raised)] z-10">
                           {row.name}
@@ -456,8 +451,7 @@ function RekapContent() {
             <table className="w-full border-collapse text-xs">
               <thead className="sticky top-0 z-10 bg-slate-200 text-slate-800">
                 <tr>
-                  <th className="border border-slate-300 px-2.5 py-2 text-center font-bold">No</th>
-                  <th className="border border-slate-300 px-2.5 py-2 text-left font-bold">NIS</th>
+                  <th className="border border-slate-300 px-2.5 py-2 text-center font-bold">No. Absen</th>
                   <th className="sticky left-0 z-20 border border-slate-300 bg-slate-200 px-3 py-2 text-left font-bold shadow-[3px_0_6px_-2px_rgba(0,0,0,0.12)]">Nama Siswa</th>
                   <th className="border border-slate-300 px-2 py-2 text-center font-bold">L/P</th>
                   <th className="border border-slate-300 px-2.5 py-2 text-left font-bold">Kelas</th>
@@ -474,8 +468,7 @@ function RekapContent() {
               <tbody>
                 {sortedRows.map((row, idx) => (
                   <tr key={row.student_id} className={idx % 2 === 0 ? "bg-white" : "bg-slate-50/80"}>
-                    <td className="border border-slate-300 px-2.5 py-1.5 text-center font-mono">{idx + 1}</td>
-                    <td className="border border-slate-300 px-2.5 py-1.5 font-mono">{row.nis}</td>
+                    <td className="border border-slate-300 px-2.5 py-1.5 text-center font-mono">{row.nis || String(idx + 1).padStart(2, "0")}</td>
                     <td className="sticky left-0 z-10 border border-slate-300 bg-inherit px-3 py-1.5 font-semibold whitespace-nowrap shadow-[3px_0_6px_-2px_rgba(0,0,0,0.08)]">{row.name}</td>
                     <td className="border border-slate-300 px-2 py-1.5 text-center">{row.gender}</td>
                     <td className="border border-slate-300 px-2.5 py-1.5 whitespace-nowrap">{row.class_name}</td>
