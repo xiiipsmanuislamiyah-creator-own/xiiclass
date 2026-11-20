@@ -26,41 +26,45 @@ export function AutoplayOnScrollVideo({
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Default audio auto on (unmuted)
-  const [isMuted, setIsMuted] = useState<boolean>(false);
+  // Default audio muted to guarantee 100% frictionless autoplay across all browsers/devices
+  const [isMuted, setIsMuted] = useState<boolean>(true);
 
-  // Resilient unmuted autoplay with seamless browser gesture fallback
-  const attemptPlay = useCallback(async () => {
+  const attemptPlay = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    video.muted = false;
-    try {
-      await video.play();
-      setIsMuted(false);
-    } catch {
-      // Browser autoplay policy blocked unmuted audio -> keep playing muted first
-      video.muted = true;
-      setIsMuted(true);
-      try {
-        await video.play();
-      } catch {
-        // Fallback ignore
-      }
-
-      // Instant unmute on the very first screen touch or click
-      const enableAudioOnGesture = () => {
-        if (videoRef.current) {
-          videoRef.current.muted = false;
-          setIsMuted(false);
-        }
-        window.removeEventListener("click", enableAudioOnGesture);
-        window.removeEventListener("touchstart", enableAudioOnGesture);
-      };
-      window.addEventListener("click", enableAudioOnGesture, { once: true, passive: true });
-      window.addEventListener("touchstart", enableAudioOnGesture, { once: true, passive: true });
+    video.muted = isMuted;
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Enforce muted and retry if browser autoplay policy rejects
+        video.muted = true;
+        setIsMuted(true);
+        video.play().catch(() => {});
+      });
     }
-  }, []);
+  }, [isMuted]);
+
+  // Initial playback on mount and when ready
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.defaultMuted = true;
+    video.muted = true;
+    attemptPlay();
+
+    const handleCanPlay = () => {
+      if (video.paused) {
+        attemptPlay();
+      }
+    };
+
+    video.addEventListener("canplay", handleCanPlay);
+    return () => {
+      video.removeEventListener("canplay", handleCanPlay);
+    };
+  }, [attemptPlay]);
 
   // Viewport Intersection Observer for Auto-play / Auto-pause
   useEffect(() => {
@@ -79,8 +83,8 @@ export function AutoplayOnScrollVideo({
         });
       },
       {
-        threshold: 0.25,
-        rootMargin: "0px 0px -40px 0px",
+        threshold: 0.05,
+        rootMargin: "300px 0px 300px 0px",
       }
     );
 
@@ -88,21 +92,29 @@ export function AutoplayOnScrollVideo({
     return () => observer.disconnect();
   }, [attemptPlay]);
 
-  // Toggle Sound (Mute / Unmute)
+  // Toggle Sound (Mute / Unmute) via explicit user click
   const toggleSound = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!videoRef.current) return;
+    const video = videoRef.current;
+    if (!video) return;
     const nextMuted = !isMuted;
-    videoRef.current.muted = nextMuted;
+    video.muted = nextMuted;
     setIsMuted(nextMuted);
+    if (video.paused) {
+      video.play().catch(() => {});
+    }
   };
 
   // Restart video from beginning
   const handleRestart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!videoRef.current) return;
-    videoRef.current.currentTime = 0;
-    attemptPlay();
+    const video = videoRef.current;
+    if (!video) return;
+    video.currentTime = 0;
+    const p = video.play();
+    if (p !== undefined) {
+      p.catch(() => {});
+    }
   };
 
   return (
@@ -160,10 +172,11 @@ export function AutoplayOnScrollVideo({
           ref={videoRef}
           src={withBasePath(videoSrc)}
           poster={posterSrc ? withBasePath(posterSrc) : undefined}
+          autoPlay
           muted={isMuted}
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           className="h-full w-full object-cover select-none"
         />
 
